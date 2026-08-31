@@ -15,9 +15,12 @@
 # ============================================================
 
 
+
+
 # ---- 1. STATE ------------------------------------------------
 # "State" is just the stuff the game has to remember while it runs.
 # Change these and the game starts differently — try it.
+
 
 player_name = ""          # we ask for this at the start
 room = "hall"             # where the player is right now
@@ -25,109 +28,136 @@ has_key = False           # True or False — do they have the key?
 moves = 0                 # how many turns they have taken
 
 
+
+
 # ---- 2. HELPERS ----------------------------------------------
 # A function is a name for some lines you want to use more than
 # once. `def` makes one. Writing this once beats pasting it into
 # every room.
 
-def say(text):
-    """Print a message, then one blank line, so the screen breathes.
 
-    Use plain print() for lines that belong TOGETHER, and say() for the
-    last line of the thought. Calling say() on every line puts a gap
-    between each one and the screen looks broken.
-    """
-    print(text)
-    print()
+def say(text):
+   """Print a message, then one blank line, so the screen breathes.
+
+
+   Use plain print() for lines that belong TOGETHER, and say() for the
+   last line of the thought. Calling say() on every line puts a gap
+   between each one and the screen looks broken.
+   """
+   print(text)
+   print()
+
+
 
 
 def ask():
-    """Ask the player what they want to do and hand back a tidy answer.
+   """Ask the player what they want to do and hand back a tidy answer.
 
-    .strip() removes spaces they typed by accident.
-    .lower() means GO NORTH, go north and Go North all work the same.
-    Without these two, your game feels broken even when your logic is right.
-    """
-    return input("> ").strip().lower()
+
+   .strip() removes spaces they typed by accident.
+   .lower() means GO NORTH, go north and Go North all work the same.
+   Without these two, your game feels broken even when your logic is right.
+   """
+   return input("> ").strip().lower()
+
+
 
 
 # ---- 3. THE OPENING ------------------------------------------
+
 
 print("=" * 44)
 print("           THE VAULT")
 print("=" * 44)
 print()
 
-player_name = input("What is your name, explorer? ").strip()
+
+player_name = input("What is your name, fn? ").strip()
 if player_name == "":
-    player_name = "Nobody"          # they just pressed enter
+   player_name = "Nobody"          # they just pressed enter
+
 
 print()
 print("Welcome, " + player_name + ".")
-print("You are standing in a dusty hall. There is a door NORTH")
-print("and a rug on the floor you could LOOK under.")
+print("you are in big w's room he is trying to accuse you of peak news's creation. There is a door NORTH")
+print("peak news got leaked.")
 say("Type HELP if you get stuck, or QUIT to give up.")
+
+
 
 
 # ---- 4. THE GAME LOOP ----------------------------------------
 # while True means "keep going forever". The only way out is break.
 # Every turn: ask, then decide what that answer means.
 
+
 while True:
-    command = ask()
-    moves = moves + 1
+   command = ask()
+   moves = moves + 1
 
-    # -- commands that work anywhere ------------------------
-    if command == "quit":
-        say("You walk away. " + player_name + " lasted " + str(moves) + " moves.")
-        break
 
-    elif command == "help":
-        say("Try: LOOK, NORTH, SOUTH, TAKE KEY, OPEN VAULT, QUIT")
+   # -- commands that work anywhere ------------------------
+   if command == "quit":
+       say("he caught you making all of joshs slides. " + player_name + " lasted " + str(moves) + " moves.")
+       break
 
-    # -- the hall -------------------------------------------
-    elif room == "hall":
-        if command == "look":
-            if has_key:
-                say("Just a rug, and the hole where the key was.")
-            else:
-                say("Under the rug: a small brass KEY.")
 
-        elif command == "take key":
-            if has_key:
-                say("You already have it.")
-            else:
-                has_key = True
-                say("You pocket the key. It is colder than it should be.")
+   elif command == "help":
+       say("Try: LOOK, NORTH, SOUTH, TAKE KEY, OPEN VAULT, QUIT")
 
-        elif command == "north":
-            room = "vault"
-            print("You step into a room with a huge steel door. The VAULT.")
-            say("There is a way back SOUTH.")
 
-        else:
-            say("You cannot do that here.")
+   # -- the hall -------------------------------------------
+   elif room == "hall":
+       if command == "look":
+           if has_key:
+               say("he has a computer delete the evidence.")
+           else:
+               say("find something you can do.")
 
-    # -- the vault ------------------------------------------
-    elif room == "vault":
-        if command == "look":
-            say("A steel door with a small keyhole. It is shut.")
 
-        elif command == "south":
-            room = "hall"
-            say("Back in the dusty hall.")
+       elif command == "delete the evidence":
+           if has_key:
+               say("You already have it.")
+           else:
+               has_key = True
+               say("You pocket the key. It is colder than it should be.")
 
-        elif command == "open vault":
-            if has_key:
-                print("The key turns. The door swings open.")
-                print("Inside: absolutely nothing. Someone beat you here.")
-                say("You win anyway, " + player_name + " — in " + str(moves) + " moves.")
-                break
-            else:
-                say("It is locked. You need a key.")
 
-        else:
-            say("You cannot do that here.")
+       elif command == "north":
+           room = "vault"
+           print("You step into a room with a huge steel door. The VAULT.")
+           say("There is a way back SOUTH.")
+
+
+       else:
+           say("You cannot do that here.")
+
+
+   # -- the vault ------------------------------------------
+   elif room == "vault":
+       if command == "look":
+           say("A steel door with a small keyhole. It is shut.")
+
+
+       elif command == "south":
+           room = "hall"
+           say("Back in the dusty hall.")
+
+
+       elif command == "open vault":
+           if has_key:
+               print("YOU WIN.")
+               print("Inside: absolutely nothing. Someone beat you here.")
+               say("You win anyway, " + player_name + " — in " + str(moves) + " moves.")
+               break
+           else:
+               say("It is locked. You need a key.")
+
+
+       else:
+           say("You cannot do that here.")
+
+
 
 
 # ============================================================

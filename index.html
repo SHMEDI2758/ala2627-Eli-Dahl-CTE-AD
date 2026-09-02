@@ -6,52 +6,82 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   <!-- CHANGE THIS. It is the name on the browser tab, and it is what Google shows. -->
-  <title>Eli Dahl's Amazing Ultimate Chad Website</title>
+  <title>Eli Dahl | Outdoor projects</title>
 
   <!-- CHANGE THIS TOO. One sentence. It is what shows under your link when someone shares it. -->
-  <meta name="description" content="One sentence about who you are and what you make.">
+  <meta name="description" content="Eli Dahl's projects, interests, and experiments in code.">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap"
+    rel="stylesheet">
 
   <link rel="stylesheet" href="styles.css">
 </head>
 
 <body>
 
-  <header>
-    <!-- Exactly ONE h1 on the page. It is your name. -->
-    <h1>Eli Dahl</h1>
-    <p class="tagline">I hunt, fish, and do other outdoor activities.</p>
+  <header class="hero">
+    <div class="hero-mark" aria-hidden="true"><span></span></div>
+    <div class="eyebrow"><span class="status-dot"></span> Eli Dahl / personal site</div>
+    <h1>Eli <em>Dahl</em></h1>
+    <p class="tagline">I hunt, fish, and build things that get me outside.</p>
+    <div class="hero-foot">
+      <span>Based in the wild</span>
+      <span class="scroll-cue">01 <i></i> explore</span>
+    </div>
   </header>
 
   <main>
 
-    <section>
-      <h2>What I am working on</h2>
-      <ul>
-        <li><strong>Fishing Catalog.</strong> A sheet or website where people can catalog their fishing stuff.</li>
-        <li><strong>a game that runs in a browser.</strong> just knowing how to code a game and build your own things seems cool.</li>
-      </ul>
+    <section class="project-section">
+      <div class="section-heading"><span>01</span>
+        <h2>Current quests</h2>
+      </div>
+      <div class="project-grid">
+        <article class="project-card project-card--lime">
+          <div class="card-top"><span class="card-number">A / 01</span><span class="card-icon">↗</span></div>
+          <h3>Fishing<br><strong>Catalog</strong></h3>
+          <p>A digital spot for tracking gear, catches, and the stories behind them.</p>
+          <div class="card-bar"><span>in progress</span><i></i></div>
+        </article>
+        <article class="project-card project-card--orange">
+          <div class="card-top"><span class="card-number">B / 02</span><span class="card-icon">↗</span></div>
+          <h3>Browser<br><strong>Game</strong></h3>
+          <p>Learning how to turn a blank screen into something people can play.</p>
+          <div class="card-bar"><span>experimenting</span><i></i></div>
+        </article>
+      </div>
     </section>
 
-    <section>
-      <h2>What I am learning</h2>
-      <p>
-        I am learning how to create wesites. I also want to learn how to create a game if i'm bored"
-      </p>
+    <section class="learning-section">
+      <div class="section-heading"><span>02</span>
+        <h2>Next checkpoint</h2>
+      </div>
+      <div class="learning-copy">
+        <p>I am learning how to create websites and want to keep pushing into game development when inspiration strikes.
+        </p>
+        <div class="meter"><span></span></div>
+        <span class="meter-label">learning mode / active</span>
+      </div>
     </section>
 
-    <section>
-      <h2>Get in touch</h2>
+    <section class="contact-section">
+      <div class="section-heading"><span>03</span>
+        <h2>Send a signal</h2>
+      </div>
       <!--
         Put an email you will still control after graduation. If you only have the school one
         today, that is fine — put it in, and change it later. That is what commits are for.
       -->
-      <p><a href="mailto:elidahl37@gmail.com">elidahl37@gmail.com</a></p>
+      <a class="contact-link" href="mailto:elidahl37@gmail.com">elidahl37@gmail.com <span>↗</span></a>
     </section>
 
   </main>
 
   <footer>
-    <p>Built by an amazing ultimate chad. Last updated <!-- change this when you change the page --> September 2026.</p>
+    <p><span>Built by Eli Dahl.</span> Last updated <!-- change this when you change the page --> September 2026.</p>
   </footer>
 
 </body>

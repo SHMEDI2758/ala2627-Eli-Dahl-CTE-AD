@@ -7,11 +7,11 @@
 /* The custom properties. Change a colour ONCE here and it
    changes everywhere it is used further down. */
 :root {
-  --ink:        #aa4a44;   /* body text */
+  --ink:        #780606;   /* body text */
   --muted:      #5a6472;   /* quieter text */
   --accent:     #0a6373;   /* links and rules — make this yours */
   --paper:      #4169e1;
-  --line:       #aa4a44;
+  --line:       #780606;
   --measure:    34rem;     /* how wide a line of text gets before it wraps */
 }
 

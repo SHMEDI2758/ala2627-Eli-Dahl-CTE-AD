@@ -8,10 +8,10 @@
    changes everywhere it is used further down. */
 :root {
   --ink:        #FFFFFF;   /* body text */
-  --muted:      #5a6472;   /* quieter text */
+  --muted:      #0000ff;   /* quieter text */
   --accent:     #0000ff;   /* links and rules — make this yours */
   --paper:      #008000;
-  --line:       #780606;
+  --line:       #0000ff;
   --measure:    34rem;     /* how wide a line of text gets before it wraps */
 }
 

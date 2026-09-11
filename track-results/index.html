@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Eli Dahl Track Results</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+
+<body>
+  <main class="page-shell">
+    <header class="hero">
+      <p class="eyebrow">Athletic History</p>
+      <h1>Eli Dahl</h1>
+      <p class="subtitle">Track Results by Event</p>
+    </header>
+
+    <section id="results" class="results"></section>
+  </main>
+
+  <script src="data.js"></script>
+  <script>
+    const resultsContainer = document.getElementById('results');
+    const eventGroups = new Map();
+
+    trackResults.forEach((entry) => {
+      if (!eventGroups.has(entry.event)) {
+        eventGroups.set(entry.event, []);
+      }
+      eventGroups.get(entry.event).push(entry);
+    });
+
+    [...eventGroups.keys()]
+      .sort((a, b) => a.localeCompare(b))
+      .forEach((eventName) => {
+        const group = [...eventGroups.get(eventName)].sort((a, b) => {
+          const aTime = Number(a.sortValue ?? Infinity);
+          const bTime = Number(b.sortValue ?? Infinity);
+          return aTime - bTime;
+        });
+
+        const section = document.createElement('section');
+        section.className = 'event-group';
+
+        const heading = document.createElement('h2');
+        heading.textContent = eventName;
+        section.appendChild(heading);
+
+        const table = document.createElement('table');
+        table.innerHTML = `
+            <thead>
+              <tr>
+                <th>Date</th>
+                <th>Meet</th>
+                <th>Athlete / Relay</th>
+                <th>School</th>
+                <th>Mark</th>
+                <th>Grade</th>
+              </tr>
+            </thead>
+          `;
+
+        const tbody = document.createElement('tbody');
+
+        group.forEach((entry) => {
+          const row = document.createElement('tr');
+          row.innerHTML = `
+              <td data-label="Date">${entry.date}</td>
+              <td data-label="Meet">${entry.meet}</td>
+              <td data-label="Athlete / Relay">${entry.athlete}</td>
+              <td data-label="School">${entry.team}</td>
+              <td data-label="Mark">${entry.mark}</td>
+              <td data-label="Grade">${entry.grade}</td>
+            `;
+          tbody.appendChild(row);
+        });
+
+        table.appendChild(tbody);
+        section.appendChild(table);
+        resultsContainer.appendChild(section);
+      });
+  </script>
+</body>
+
+</html>

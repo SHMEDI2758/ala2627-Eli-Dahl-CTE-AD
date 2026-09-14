@@ -12,9 +12,14 @@
   <main class="page-shell">
     <header class="hero">
       <p class="eyebrow">Athletic History</p>
-      <h1>Eli Dahl</h1>
-      <p class="subtitle">Track Results by Event</p>
+      <h1>PB</h1>
+      <p class="subtitle">Personal Bests</p>
     </header>
+
+    <section id="pb-results-section" class="results-section">
+      <h2>PB</h2>
+      <div id="pb-results" class="results"></div>
+    </section>
 
     <section id="results" class="results"></section>
   </main>
@@ -22,6 +27,7 @@
   <script src="data.js"></script>
   <script>
     const resultsContainer = document.getElementById('results');
+    const pbResultsContainer = document.getElementById('pb-results');
     const eventGroups = new Map();
 
     trackResults.forEach((entry) => {
@@ -31,54 +37,75 @@
       eventGroups.get(entry.event).push(entry);
     });
 
+    const createTableSection = (title, group) => {
+      const section = document.createElement('section');
+      section.className = 'event-group';
+
+      const heading = document.createElement('h2');
+      heading.textContent = title;
+      section.appendChild(heading);
+
+      const table = document.createElement('table');
+      table.innerHTML = `
+          <thead>
+            <tr>
+              <th>Date</th>
+              <th>Meet</th>
+              <th>Athlete / Relay</th>
+              <th>School</th>
+              <th>Mark</th>
+              <th>Grade</th>
+            </tr>
+          </thead>
+        `;
+
+      const tbody = document.createElement('tbody');
+
+      group.forEach((entry) => {
+        const row = document.createElement('tr');
+        row.innerHTML = `
+            <td data-label="Date">${entry.date}</td>
+            <td data-label="Meet">${entry.meet}</td>
+            <td data-label="Athlete / Relay">${entry.athlete}</td>
+            <td data-label="School">${entry.team}</td>
+            <td data-label="Mark">${entry.mark}</td>
+            <td data-label="Grade">${entry.grade}</td>
+          `;
+        tbody.appendChild(row);
+      });
+
+      table.appendChild(tbody);
+      section.appendChild(table);
+      return section;
+    };
+
+    const pbEntries = trackResults.filter((entry) => /\bPB\b/i.test(entry.mark));
+    if (pbEntries.length) {
+      const pbGroup = [...pbEntries].sort((a, b) => {
+        const aTime = Number(a.sortValue ?? Infinity);
+        const bTime = Number(b.sortValue ?? Infinity);
+        return aTime - bTime;
+      });
+      pbResultsContainer.appendChild(createTableSection('PB', pbGroup));
+    }
+
     [...eventGroups.keys()]
       .sort((a, b) => a.localeCompare(b))
       .forEach((eventName) => {
         const group = [...eventGroups.get(eventName)].sort((a, b) => {
+          const aIsPb = /\bPB\b/i.test(a.mark) ? 0 : 1;
+          const bIsPb = /\bPB\b/i.test(b.mark) ? 0 : 1;
+
+          if (aIsPb !== bIsPb) {
+            return aIsPb - bIsPb;
+          }
+
           const aTime = Number(a.sortValue ?? Infinity);
           const bTime = Number(b.sortValue ?? Infinity);
           return aTime - bTime;
         });
 
-        const section = document.createElement('section');
-        section.className = 'event-group';
-
-        const heading = document.createElement('h2');
-        heading.textContent = eventName;
-        section.appendChild(heading);
-
-        const table = document.createElement('table');
-        table.innerHTML = `
-            <thead>
-              <tr>
-                <th>Date</th>
-                <th>Meet</th>
-                <th>Athlete / Relay</th>
-                <th>School</th>
-                <th>Mark</th>
-                <th>Grade</th>
-              </tr>
-            </thead>
-          `;
-
-        const tbody = document.createElement('tbody');
-
-        group.forEach((entry) => {
-          const row = document.createElement('tr');
-          row.innerHTML = `
-              <td data-label="Date">${entry.date}</td>
-              <td data-label="Meet">${entry.meet}</td>
-              <td data-label="Athlete / Relay">${entry.athlete}</td>
-              <td data-label="School">${entry.team}</td>
-              <td data-label="Mark">${entry.mark}</td>
-              <td data-label="Grade">${entry.grade}</td>
-            `;
-          tbody.appendChild(row);
-        });
-
-        table.appendChild(tbody);
-        section.appendChild(table);
-        resultsContainer.appendChild(section);
+        resultsContainer.appendChild(createTableSection(eventName, group));
       });
   </script>
 </body>

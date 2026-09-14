@@ -120,6 +120,16 @@ tbody tr:hover {
   font-weight: 700;
 }
 
+.sb-row {
+  background: linear-gradient(90deg, rgba(245, 200, 66, 0.18), rgba(36, 94, 229, 0.08));
+  box-shadow: inset 0 0 0 1px rgba(245, 200, 66, 0.8);
+}
+
+.sb-row td {
+  color: #fff9df;
+  font-weight: 600;
+}
+
 td {
   color: var(--white);
   line-height: 1.45;

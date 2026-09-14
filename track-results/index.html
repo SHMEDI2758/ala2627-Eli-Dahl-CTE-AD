@@ -63,8 +63,12 @@
       group.forEach((entry) => {
         const row = document.createElement('tr');
         const isPbRow = /\bPB\b/i.test(entry.mark);
+        const isSbRow = /\bSB\b/i.test(entry.mark);
         if (isPbRow) {
           row.classList.add('pb-row');
+        }
+        if (isSbRow) {
+          row.classList.add('sb-row');
         }
 
         const rowContent = includeEventColumn

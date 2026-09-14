@@ -100,7 +100,19 @@
       return section;
     };
 
-    const pbEntries = trackResults.filter((entry) => /\bPB\b/i.test(entry.mark));
+    const pbEntriesByEvent = new Map();
+    trackResults.forEach((entry) => {
+      if (!/\bPB\b/i.test(entry.mark)) {
+        return;
+      }
+
+      const currentBest = pbEntriesByEvent.get(entry.event);
+      if (!currentBest || Number(entry.sortValue ?? Infinity) < Number(currentBest.sortValue ?? Infinity)) {
+        pbEntriesByEvent.set(entry.event, entry);
+      }
+    });
+
+    const pbEntries = [...pbEntriesByEvent.values()];
     if (pbEntries.length) {
       const pbGroup = [...pbEntries].sort((a, b) => {
         const aTime = Number(a.sortValue ?? Infinity);

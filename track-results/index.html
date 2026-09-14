@@ -45,7 +45,7 @@
 
     const sortByMode = (a, b) => {
       if (sortMode === 'date') {
-        return parseDate(a.date) - parseDate(b.date);
+        return parseDate(b.date) - parseDate(a.date);
       }
 
       const aTime = Number(a.sortValue ?? Infinity);

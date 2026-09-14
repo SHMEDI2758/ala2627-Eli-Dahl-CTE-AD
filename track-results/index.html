@@ -122,7 +122,10 @@
       pbResultsContainer.appendChild(createTableSection('PB', pbGroup, true));
     }
 
+    const allowedEvents = new Set(['1 Mile', '1600 Meters', '800 Meters', '3200 Meters']);
+
     [...eventGroups.keys()]
+      .filter((eventName) => allowedEvents.has(eventName))
       .sort((a, b) => a.localeCompare(b))
       .forEach((eventName) => {
         const group = [...eventGroups.get(eventName)].sort((a, b) => {

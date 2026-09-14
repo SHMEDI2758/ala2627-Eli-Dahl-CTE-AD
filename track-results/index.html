@@ -37,7 +37,7 @@
       eventGroups.get(entry.event).push(entry);
     });
 
-    const createTableSection = (title, group) => {
+    const createTableSection = (title, group, includeEventColumn = false) => {
       const section = document.createElement('section');
       section.className = 'event-group';
 
@@ -46,15 +46,14 @@
       section.appendChild(heading);
 
       const table = document.createElement('table');
+      const headerCells = includeEventColumn
+        ? ['Event', 'Date', 'Meet', 'Athlete / Relay', 'School', 'Mark', 'Grade']
+        : ['Date', 'Meet', 'Athlete / Relay', 'School', 'Mark', 'Grade'];
+
       table.innerHTML = `
           <thead>
             <tr>
-              <th>Date</th>
-              <th>Meet</th>
-              <th>Athlete / Relay</th>
-              <th>School</th>
-              <th>Mark</th>
-              <th>Grade</th>
+              ${headerCells.map((cell) => `<th>${cell}</th>`).join('')}
             </tr>
           </thead>
         `;
@@ -63,14 +62,25 @@
 
       group.forEach((entry) => {
         const row = document.createElement('tr');
-        row.innerHTML = `
-            <td data-label="Date">${entry.date}</td>
-            <td data-label="Meet">${entry.meet}</td>
-            <td data-label="Athlete / Relay">${entry.athlete}</td>
-            <td data-label="School">${entry.team}</td>
-            <td data-label="Mark">${entry.mark}</td>
-            <td data-label="Grade">${entry.grade}</td>
-          `;
+        const rowContent = includeEventColumn
+          ? `
+              <td data-label="Event">${entry.event}</td>
+              <td data-label="Date">${entry.date}</td>
+              <td data-label="Meet">${entry.meet}</td>
+              <td data-label="Athlete / Relay">${entry.athlete}</td>
+              <td data-label="School">${entry.team}</td>
+              <td data-label="Mark">${entry.mark}</td>
+              <td data-label="Grade">${entry.grade}</td>
+            `
+          : `
+              <td data-label="Date">${entry.date}</td>
+              <td data-label="Meet">${entry.meet}</td>
+              <td data-label="Athlete / Relay">${entry.athlete}</td>
+              <td data-label="School">${entry.team}</td>
+              <td data-label="Mark">${entry.mark}</td>
+              <td data-label="Grade">${entry.grade}</td>
+            `;
+        row.innerHTML = rowContent;
         tbody.appendChild(row);
       });
 
@@ -86,7 +96,7 @@
         const bTime = Number(b.sortValue ?? Infinity);
         return aTime - bTime;
       });
-      pbResultsContainer.appendChild(createTableSection('PB', pbGroup));
+      pbResultsContainer.appendChild(createTableSection('PB', pbGroup, true));
     }
 
     [...eventGroups.keys()]

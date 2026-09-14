@@ -16,6 +16,12 @@
       <p class="subtitle">Personal Bests</p>
     </header>
 
+    <div class="sort-controls" aria-label="Sort results by time or date">
+      <span class="sort-label">Sort:</span>
+      <button class="sort-button active" type="button" data-sort="time">Time</button>
+      <button class="sort-button" type="button" data-sort="date">Date</button>
+    </div>
+
     <section id="pb-results-section" class="results-section">
       <h2>PB</h2>
       <div id="pb-results" class="results"></div>
@@ -29,6 +35,23 @@
     const resultsContainer = document.getElementById('results');
     const pbResultsContainer = document.getElementById('pb-results');
     const eventGroups = new Map();
+    const allowedEvents = new Set(['1 Mile', '1600 Meters', '800 Meters', '3200 Meters']);
+    let sortMode = 'time';
+
+    const parseDate = (dateString) => {
+      const parsed = new Date(dateString);
+      return Number.isNaN(parsed.getTime()) ? 0 : parsed.getTime();
+    };
+
+    const sortByMode = (a, b) => {
+      if (sortMode === 'date') {
+        return parseDate(a.date) - parseDate(b.date);
+      }
+
+      const aTime = Number(a.sortValue ?? Infinity);
+      const bTime = Number(b.sortValue ?? Infinity);
+      return aTime - bTime;
+    };
 
     trackResults.forEach((entry) => {
       if (!eventGroups.has(entry.event)) {
@@ -98,45 +121,53 @@
       return section;
     };
 
-    const pbEntriesByEvent = new Map();
-    trackResults.forEach((entry) => {
-      if (!/\bPB\b/i.test(entry.mark)) {
-        return;
+    const renderResults = () => {
+      resultsContainer.innerHTML = '';
+      pbResultsContainer.innerHTML = '';
+
+      const pbEntriesByEvent = new Map();
+      trackResults.forEach((entry) => {
+        if (!/\bPB\b/i.test(entry.mark)) {
+          return;
+        }
+
+        const currentBest = pbEntriesByEvent.get(entry.event);
+        if (!currentBest || Number(entry.sortValue ?? Infinity) < Number(currentBest.sortValue ?? Infinity)) {
+          pbEntriesByEvent.set(entry.event, entry);
+        }
+      });
+
+      const pbEntries = [...pbEntriesByEvent.values()].filter((entry) =>
+        allowedEvents.has(entry.event)
+      );
+
+      if (pbEntries.length) {
+        const pbGroup = [...pbEntries].sort(sortByMode);
+        pbResultsContainer.appendChild(createTableSection('PB', pbGroup, true));
       }
 
-      const currentBest = pbEntriesByEvent.get(entry.event);
-      if (!currentBest || Number(entry.sortValue ?? Infinity) < Number(currentBest.sortValue ?? Infinity)) {
-        pbEntriesByEvent.set(entry.event, entry);
-      }
+      [...eventGroups.keys()]
+        .filter((eventName) => allowedEvents.has(eventName))
+        .sort((a, b) => a.localeCompare(b))
+        .forEach((eventName) => {
+          const group = [...eventGroups.get(eventName)].sort(sortByMode);
+          resultsContainer.appendChild(createTableSection(eventName, group));
+        });
+    };
+
+    document.querySelectorAll('.sort-button').forEach((button) => {
+      button.addEventListener('click', () => {
+        sortMode = button.dataset.sort;
+
+        document.querySelectorAll('.sort-button').forEach((btn) => {
+          btn.classList.toggle('active', btn === button);
+        });
+
+        renderResults();
+      });
     });
 
-    const pbEntries = [...pbEntriesByEvent.values()].filter((entry) =>
-      ['1 Mile', '1600 Meters', '800 Meters', '3200 Meters'].includes(entry.event)
-    );
-    if (pbEntries.length) {
-      const pbGroup = [...pbEntries].sort((a, b) => {
-        const aTime = Number(a.sortValue ?? Infinity);
-        const bTime = Number(b.sortValue ?? Infinity);
-        return aTime - bTime;
-      });
-      pbResultsContainer.appendChild(createTableSection('PB', pbGroup, true));
-    }
-
-    const allowedEvents = new Set(['1 Mile', '1600 Meters', '800 Meters', '3200 Meters']);
-
-    [...eventGroups.keys()]
-      .filter((eventName) => allowedEvents.has(eventName))
-      .sort((a, b) => a.localeCompare(b))
-      .forEach((eventName) => {
-        const group = [...eventGroups.get(eventName)]
-          .sort((a, b) => {
-            const aTime = Number(a.sortValue ?? Infinity);
-            const bTime = Number(b.sortValue ?? Infinity);
-            return aTime - bTime;
-          });
-
-        resultsContainer.appendChild(createTableSection(eventName, group));
-      });
+    renderResults();
   </script>
 </body>
 

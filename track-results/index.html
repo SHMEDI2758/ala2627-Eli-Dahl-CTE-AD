@@ -45,12 +45,20 @@
 
     const sortByMode = (a, b) => {
       if (sortMode === 'date') {
-        return parseDate(b.date) - parseDate(a.date);
+        const dateDiff = parseDate(b.date) - parseDate(a.date);
+        if (dateDiff !== 0) {
+          return dateDiff;
+        }
+        return trackResults.indexOf(a) - trackResults.indexOf(b);
       }
 
       const aTime = Number(a.sortValue ?? Infinity);
       const bTime = Number(b.sortValue ?? Infinity);
-      return aTime - bTime;
+      const timeDiff = aTime - bTime;
+      if (timeDiff !== 0) {
+        return timeDiff;
+      }
+      return trackResults.indexOf(a) - trackResults.indexOf(b);
     };
 
     trackResults.forEach((entry) => {

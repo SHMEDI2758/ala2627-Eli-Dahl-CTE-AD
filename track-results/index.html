@@ -112,7 +112,9 @@
       }
     });
 
-    const pbEntries = [...pbEntriesByEvent.values()];
+    const pbEntries = [...pbEntriesByEvent.values()].filter((entry) =>
+      ['1 Mile', '1600 Meters', '800 Meters', '3200 Meters'].includes(entry.event)
+    );
     if (pbEntries.length) {
       const pbGroup = [...pbEntries].sort((a, b) => {
         const aTime = Number(a.sortValue ?? Infinity);

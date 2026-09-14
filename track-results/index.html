@@ -120,8 +120,14 @@
       .sort((a, b) => a.localeCompare(b))
       .forEach((eventName) => {
         const group = [...eventGroups.get(eventName)]
-          .filter((entry) => !/\bPB\b/i.test(entry.mark))
           .sort((a, b) => {
+            const aIsPb = /\bPB\b/i.test(a.mark) ? 0 : 1;
+            const bIsPb = /\bPB\b/i.test(b.mark) ? 0 : 1;
+
+            if (aIsPb !== bIsPb) {
+              return aIsPb - bIsPb;
+            }
+
             const aTime = Number(a.sortValue ?? Infinity);
             const bTime = Number(b.sortValue ?? Infinity);
             return aTime - bTime;

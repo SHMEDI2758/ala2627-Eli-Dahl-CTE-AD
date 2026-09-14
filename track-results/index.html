@@ -37,17 +37,6 @@
       eventGroups.get(entry.event).push(entry);
     });
 
-    for (const [eventName, group] of [...eventGroups.entries()]) {
-      if (eventName === '1600 Meters' || eventName === '800 Meters') {
-        const bestEntry = [...group].sort((a, b) => {
-          const aTime = Number(a.sortValue ?? Infinity);
-          const bTime = Number(b.sortValue ?? Infinity);
-          return aTime - bTime;
-        })[0];
-        eventGroups.set(eventName, bestEntry ? [bestEntry] : group);
-      }
-    }
-
     const createTableSection = (title, group, includeEventColumn = false) => {
       const section = document.createElement('section');
       section.className = 'event-group';
@@ -130,11 +119,13 @@
       .filter((eventName) => allowedEvents.has(eventName))
       .sort((a, b) => a.localeCompare(b))
       .forEach((eventName) => {
-        const group = [...eventGroups.get(eventName)].sort((a, b) => {
-          const aTime = Number(a.sortValue ?? Infinity);
-          const bTime = Number(b.sortValue ?? Infinity);
-          return aTime - bTime;
-        });
+        const group = [...eventGroups.get(eventName)]
+          .filter((entry) => !/\bPB\b/i.test(entry.mark))
+          .sort((a, b) => {
+            const aTime = Number(a.sortValue ?? Infinity);
+            const bTime = Number(b.sortValue ?? Infinity);
+            return aTime - bTime;
+          });
 
         resultsContainer.appendChild(createTableSection(eventName, group));
       });

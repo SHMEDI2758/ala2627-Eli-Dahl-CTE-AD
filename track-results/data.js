@@ -5,6 +5,7 @@ const trackResults = [
 
   { event: '100m Hurdles - 30" / 0.762m', athlete: 'Eli Dahl', team: 'Anthem Prep MS', grade: '7th Grade', date: 'Mar 30, 2023', meet: 'Great Hearts West Valley Meet #4', mark: '23.54c PB', sortValue: 23.54 },
 
+  { event: '1600 Meters', athlete: 'Eli Dahl', team: 'ALA - Vistancia HS', grade: '10th Grade', date: 'Apr 02, 2026', meet: 'CSHS - Falcons Home Meet', mark: '4:58.79', sortValue: 298.79 },
   { event: '1600 Meters', athlete: 'Eli Dahl', team: 'ALA - Vistancia HS', grade: '10th Grade', date: 'Apr 10, 2026', meet: '2026 Westwood Invitational', mark: '4:58.42', sortValue: 298.42 },
   { event: '1600 Meters', athlete: 'Eli Dahl', team: 'ALA - Vistancia HS', grade: '10th Grade', date: 'Apr 22, 2026', meet: 'NDP Our Lady of Victory Invitational', mark: '4:52.08 PB', sortValue: 292.08 },
   { event: '1600 Meters', athlete: 'Eli Dahl', team: 'ALA - Vistancia HS', grade: '10th Grade', date: 'Apr 25, 2026', meet: 'ALA DISTRICT CHAMPIONSHIP', mark: '4:56.34', sortValue: 296.34 },

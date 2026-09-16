@@ -14,7 +14,15 @@
       <h1>Minesweeper</h1>
       <div class="topbar">
         <span id="status">Hard Mode</span>
-        <button id="reset" type="button">New Game</button>
+        <div class="controls">
+          <div id="mine-count" class="mine-counter">Mines Left: 30</div>
+          <div class="mode-switcher" aria-label="Difficulty selection">
+            <button class="mode-btn" type="button" data-mode="easy">Easy</button>
+            <button class="mode-btn" type="button" data-mode="medium">Medium</button>
+            <button class="mode-btn active" type="button" data-mode="hard">Hard</button>
+          </div>
+          <button id="reset" type="button">New Game</button>
+        </div>
       </div>
       <div id="board" class="board" aria-label="Minesweeper board"></div>
       <p class="instructions">

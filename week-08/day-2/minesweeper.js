@@ -7,7 +7,7 @@ const modeButtons = document.querySelectorAll('.mode-btn');
 const difficultySettings = {
   easy: { rows: 9, cols: 9, mineCount: 10, label: 'Easy' },
   medium: { rows: 12, cols: 12, mineCount: 18, label: 'Medium' },
-  hard: { rows: 14, cols: 14, mineCount: 30, label: 'Hard' },
+  hard: { rows: 25, cols: 25, mineCount: Math.floor((25 * 25) / 3), label: 'Hard' },
 };
 
 let rows = difficultySettings.hard.rows;
@@ -161,9 +161,9 @@ function updateMineCounter() {
 }
 
 function updateBoardSizing() {
-  const safeMin = cols >= 12 ? 26 : 30;
+  const safeMin = cols >= 20 ? 10 : cols >= 12 ? 18 : 26;
   boardEl.style.gridTemplateColumns = `repeat(${cols}, minmax(${safeMin}px, 1fr))`;
-  boardEl.style.width = cols >= 12 ? 'min(96vw, 760px)' : 'min(90vw, 620px)';
+  boardEl.style.width = cols >= 20 ? 'min(96vw, 620px)' : cols >= 12 ? 'min(96vw, 760px)' : 'min(90vw, 620px)';
 }
 
 function buildBoardUI() {
@@ -339,7 +339,6 @@ function revealCell(row, col) {
     tile.revealed = true;
     updateCellUI(row, col);
     triggerExplosion(row, col);
-    playExplosionSound();
     playExplosionSound();
     revealAllMines();
     gameOver = true;

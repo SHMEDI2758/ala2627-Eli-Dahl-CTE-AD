@@ -7,6 +7,7 @@ const scoreEl = document.querySelector("#score");
 let playerY = 0;
 let velocity = 0;
 let gravity = 0.8;
+let jumpStrength = 10;
 let score = 0;
 let isRunning = false;
 let obstacleTimer = 0;
@@ -14,7 +15,7 @@ let obstacles = [];
 let animationId = null;
 
 function updatePlayer() {
-  player.style.bottom = playerY + "px";
+  player.style.bottom = (22 + playerY) + "px";
 }
 
 function jump() {
@@ -23,7 +24,7 @@ function jump() {
   }
 
   if (playerY <= 0) {
-    velocity = -12;
+    velocity = jumpStrength;
     output.textContent = "Jump!";
   }
 }
@@ -103,7 +104,7 @@ function gameLoop() {
     return;
   }
 
-  velocity += gravity;
+  velocity -= gravity;
   playerY += velocity;
 
   if (playerY < 0) {

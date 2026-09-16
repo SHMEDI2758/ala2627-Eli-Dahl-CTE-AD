@@ -1,0 +1,161 @@
+:root {
+  --bg: #0b1020;
+  --panel: #1a2236;
+  --cell: #dfe7f2;
+  --cell-hidden: #b7c5d6;
+  --cell-border: #7f8ea3;
+  --danger: #ff5f6d;
+  --flag: #ffb703;
+  --text: #edf3ff;
+  --shadow: rgba(0, 0, 0, 0.25);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  display: grid;
+  place-items: center;
+  background: radial-gradient(circle at top, #172641, var(--bg));
+  color: var(--text);
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+.page {
+  width: min(95vw, 860px);
+}
+
+.panel {
+  background: var(--panel);
+  border-radius: 18px;
+  padding: 20px;
+  box-shadow: 0 18px 40px var(--shadow);
+}
+
+h1 {
+  margin: 0 0 16px;
+  text-align: center;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.topbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 14px;
+}
+
+#status {
+  font-weight: 700;
+  color: #9fe7ff;
+}
+
+#reset {
+  border: none;
+  border-radius: 10px;
+  background: #5ec3ff;
+  color: #0a1826;
+  font-weight: 700;
+  padding: 10px 14px;
+  cursor: pointer;
+}
+
+.board {
+  display: grid;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  gap: 3px;
+  background: #58657e;
+  padding: 6px;
+  border-radius: 12px;
+  user-select: none;
+}
+
+.cell {
+  width: 100%;
+  aspect-ratio: 1;
+  border: 2px solid var(--cell-border);
+  background: var(--cell-hidden);
+  border-radius: 5px;
+  display: grid;
+  place-items: center;
+  font-weight: 700;
+  cursor: pointer;
+  transition: transform 0.08s ease, filter 0.08s ease;
+}
+
+.cell:hover {
+  filter: brightness(1.05);
+}
+
+.cell:active {
+  transform: scale(0.96);
+}
+
+.cell.revealed {
+  background: var(--cell);
+  border-color: #c2cedb;
+  cursor: default;
+}
+
+.cell.flagged {
+  background: #ffe49a;
+  color: var(--danger);
+}
+
+.cell.mine {
+  background: var(--danger);
+}
+
+.cell[data-number="1"] {
+  color: #1d4ed8;
+}
+
+.cell[data-number="2"] {
+  color: #15803d;
+}
+
+.cell[data-number="3"] {
+  color: #b91c1c;
+}
+
+.cell[data-number="4"] {
+  color: #312e81;
+}
+
+.cell[data-number="5"] {
+  color: #7c2d12;
+}
+
+.cell[data-number="6"] {
+  color: #0f766e;
+}
+
+.cell[data-number="7"] {
+  color: #111827;
+}
+
+.cell[data-number="8"] {
+  color: #6b7280;
+}
+
+.instructions {
+  margin: 16px 0 0;
+  text-align: center;
+  color: #dfeaff;
+  opacity: 0.9;
+}
+
+@media (max-width: 640px) {
+  .panel {
+    padding: 14px;
+  }
+
+  .board {
+    grid-template-columns: repeat(12, minmax(18px, 1fr));
+  }
+}

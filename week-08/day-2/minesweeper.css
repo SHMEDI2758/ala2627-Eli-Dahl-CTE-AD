@@ -215,6 +215,11 @@ body.mode-hard .cell {
   animation: shake-board 0.2s linear;
 }
 
+.cell.invalid {
+  animation: invalid-click 0.22s ease;
+  background: #ffd1d1;
+}
+
 .board.win-flash {
   animation: win-flash 0.55s ease-in-out 2;
 }
@@ -246,6 +251,36 @@ body.mode-hard .cell {
 
   100% {
     transform: translateX(0);
+  }
+}
+
+@keyframes invalid-click {
+  0% {
+    transform: translateX(0);
+    filter: brightness(1);
+  }
+
+  20% {
+    transform: translateX(-3px);
+    filter: brightness(0.9);
+  }
+
+  40% {
+    transform: translateX(3px);
+    filter: brightness(1.1);
+  }
+
+  60% {
+    transform: translateX(-2px);
+  }
+
+  80% {
+    transform: translateX(2px);
+  }
+
+  100% {
+    transform: translateX(0);
+    filter: brightness(1);
   }
 }
 

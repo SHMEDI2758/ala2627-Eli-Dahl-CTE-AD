@@ -279,6 +279,16 @@ function triggerExplosion(row, col) {
   }, 20);
 }
 
+function triggerInvalidClick(row, col) {
+  const cell = document.querySelector(`.cell[data-row="${row}"][data-col="${col}"]`);
+  if (!cell) return;
+
+  cell.classList.remove('invalid');
+  void cell.offsetWidth;
+  cell.classList.add('invalid');
+  setTimeout(() => cell.classList.remove('invalid'), 220);
+}
+
 function countAdjacentFlags(row, col) {
   let total = 0;
 
@@ -305,6 +315,8 @@ function revealNumberNeighbors(row, col) {
   }
 
   if (countAdjacentFlags(row, col) !== tile.adjacent) {
+    statusEl.textContent = 'Not enough flags yet.';
+    triggerInvalidClick(row, col);
     return;
   }
 
@@ -345,7 +357,11 @@ function revealCell(row, col) {
 
   const tile = board[row][col];
 
-  if (tile.flagged) return;
+  if (tile.flagged) {
+    statusEl.textContent = 'That square is flagged.';
+    triggerInvalidClick(row, col);
+    return;
+  }
 
   if (tile.revealed) {
     revealNumberNeighbors(row, col);

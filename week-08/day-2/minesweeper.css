@@ -92,6 +92,44 @@ h1 {
   font-size: 0.7rem;
   cursor: pointer;
   transition: transform 0.08s ease, filter 0.08s ease;
+  position: relative;
+}
+
+.cell.exploding {
+  background: radial-gradient(circle, #fff7b0 0%, #ffb703 18%, #ff5f6d 52%, #7a1d1d 100%);
+  transform: scale(1.2);
+  box-shadow: 0 0 18px rgba(255, 95, 109, 0.9);
+  z-index: 5;
+}
+
+.board.shake {
+  animation: shake-board 0.2s linear;
+}
+
+@keyframes shake-board {
+  0% {
+    transform: translateX(0);
+  }
+
+  20% {
+    transform: translateX(-4px);
+  }
+
+  40% {
+    transform: translateX(4px);
+  }
+
+  60% {
+    transform: translateX(-4px);
+  }
+
+  80% {
+    transform: translateX(4px);
+  }
+
+  100% {
+    transform: translateX(0);
+  }
 }
 
 .cell:hover {

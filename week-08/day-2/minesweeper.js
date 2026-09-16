@@ -140,6 +140,21 @@ function revealAllMines() {
   }
 }
 
+function triggerExplosion(row, col) {
+  const cell = document.querySelector(`.cell[data-row="${row}"][data-col="${col}"]`);
+  if (!cell) return;
+
+  cell.classList.add('exploding');
+  setTimeout(() => {
+    cell.classList.remove('exploding');
+  }, 260);
+
+  setTimeout(() => {
+    boardEl.classList.add('shake');
+    setTimeout(() => boardEl.classList.remove('shake'), 240);
+  }, 20);
+}
+
 function revealCell(row, col) {
   if (gameOver) return;
 
@@ -155,6 +170,7 @@ function revealCell(row, col) {
   if (tile.mine) {
     tile.revealed = true;
     updateCellUI(row, col);
+    triggerExplosion(row, col);
     revealAllMines();
     gameOver = true;
     statusEl.textContent = 'Boom! You lost.';

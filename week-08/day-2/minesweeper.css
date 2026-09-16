@@ -144,6 +144,7 @@ h1 {
   border-radius: 12px;
   user-select: none;
   margin: 0 auto;
+  position: relative;
 }
 
 .cell {
@@ -218,6 +219,24 @@ body.mode-hard .cell {
 .cell.invalid {
   animation: invalid-click 0.22s ease;
   background: #ffd1d1;
+  outline: 3px solid #ff4057;
+  outline-offset: 1px;
+  z-index: 6;
+}
+
+.board.invalid-board::after {
+  content: 'NOPE';
+  position: absolute;
+  inset: 50% auto auto 50%;
+  color: #ff4057;
+  font-size: clamp(1.8rem, 7vw, 4.5rem);
+  font-weight: 900;
+  letter-spacing: 0.12em;
+  text-shadow: 0 3px 0 #2a1020, 0 0 18px rgba(255, 64, 87, 0.9);
+  pointer-events: none;
+  transform: translate(-50%, -50%) rotate(-8deg);
+  animation: invalid-banner 0.42s ease-out forwards;
+  z-index: 20;
 }
 
 .board.win-flash {
@@ -281,6 +300,23 @@ body.mode-hard .cell {
   100% {
     transform: translateX(0);
     filter: brightness(1);
+  }
+}
+
+@keyframes invalid-banner {
+  0% {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0.55) rotate(-8deg);
+  }
+
+  35% {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1.12) rotate(-8deg);
+  }
+
+  100% {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(1) rotate(-8deg);
   }
 }
 

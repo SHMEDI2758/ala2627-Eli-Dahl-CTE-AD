@@ -56,6 +56,11 @@ function playTone(frequency, duration, type = 'sine', volume = 0.05) {
   oscillator.stop(context.currentTime + duration);
 }
 
+function playInvalidSound() {
+  playTone(125, 0.08, 'square', 0.045);
+  setTimeout(() => playTone(85, 0.1, 'square', 0.035), 55);
+}
+
 function playExplosionSound() {
   const context = getAudioContext();
   if (!context) return;
@@ -286,7 +291,12 @@ function triggerInvalidClick(row, col) {
   cell.classList.remove('invalid');
   void cell.offsetWidth;
   cell.classList.add('invalid');
+  boardEl.classList.remove('invalid-board');
+  void boardEl.offsetWidth;
+  boardEl.classList.add('invalid-board');
+  playInvalidSound();
   setTimeout(() => cell.classList.remove('invalid'), 220);
+  setTimeout(() => boardEl.classList.remove('invalid-board'), 420);
 }
 
 function countAdjacentFlags(row, col) {

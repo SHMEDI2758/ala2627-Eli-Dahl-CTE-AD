@@ -67,7 +67,7 @@ h1 {
 
 .board {
   display: grid;
-  grid-template-columns: repeat(12, minmax(0, 1fr));
+  grid-template-columns: repeat(14, minmax(0, 1fr));
   gap: 3px;
   background: #58657e;
   padding: 6px;
@@ -156,6 +156,6 @@ h1 {
   }
 
   .board {
-    grid-template-columns: repeat(12, minmax(18px, 1fr));
+    grid-template-columns: repeat(14, minmax(18px, 1fr));
   }
 }

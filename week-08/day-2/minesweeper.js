@@ -2,9 +2,9 @@ const boardEl = document.getElementById('board');
 const statusEl = document.getElementById('status');
 const resetBtn = document.getElementById('reset');
 
-const rows = 12;
-const cols = 12;
-const mineCount = 22;
+const rows = 14;
+const cols = 14;
+const mineCount = 30;
 
 let board = [];
 let firstMove = true;
@@ -32,13 +32,16 @@ function createBoard() {
 }
 
 function placeMines(exceptRow, exceptCol) {
+  const safeRadius = 1;
   let placed = 0;
 
   while (placed < mineCount) {
     const row = Math.floor(Math.random() * rows);
     const col = Math.floor(Math.random() * cols);
 
-    if ((row === exceptRow && col === exceptCol) || board[row][col].mine) {
+    const inSafeZone = Math.abs(row - exceptRow) <= safeRadius && Math.abs(col - exceptCol) <= safeRadius;
+
+    if (inSafeZone || board[row][col].mine) {
       continue;
     }
 

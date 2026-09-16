@@ -442,6 +442,9 @@ function setMode(mode) {
 }
 
 function resetGame() {
+  document.body.classList.remove('mode-easy', 'mode-medium', 'mode-hard');
+  document.body.classList.add(`mode-${currentMode}`);
+
   createBoard();
   firstMove = true;
   gameOver = false;

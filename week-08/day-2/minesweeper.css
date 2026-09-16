@@ -40,6 +40,31 @@ body {
   flex-direction: column;
 }
 
+body.mode-hard .page,
+body.mode-hard .panel {
+  width: 100vw;
+  min-height: 100vh;
+  max-width: none;
+}
+
+body.mode-hard .panel {
+  border-radius: 0;
+  padding: 10px 8px 8px;
+  background: rgba(11, 16, 32, 0.98);
+}
+
+body.mode-hard .topbar {
+  margin-bottom: 8px;
+}
+
+body.mode-hard h1 {
+  display: none;
+}
+
+body.mode-hard .instructions {
+  display: none;
+}
+
 h1 {
   margin: 0 0 16px;
   text-align: center;

@@ -183,6 +183,27 @@ body.mode-hard .cell {
   font-size: 0.52rem;
 }
 
+body.mode-hard .board {
+  display: grid;
+  grid-template-columns: repeat(25, minmax(9px, 1fr));
+  gap: 0;
+  width: min(100%, calc(100vw - 18px));
+  flex: 1;
+  background: transparent;
+  padding: 0;
+  border-radius: 0;
+  user-select: none;
+  margin: 0 auto;
+  align-content: center;
+}
+
+body.mode-hard .cell {
+  min-height: 9px;
+  border: none;
+  border-radius: 0;
+  font-size: 0.52rem;
+}
+
 .cell.exploding {
   background: radial-gradient(circle, #fff7b0 0%, #ffb703 18%, #ff5f6d 52%, #7a1d1d 100%);
   transform: scale(1.2);

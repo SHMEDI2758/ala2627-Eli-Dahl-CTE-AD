@@ -1,6 +1,7 @@
 const boardEl = document.getElementById('board');
 const statusEl = document.getElementById('status');
 const resetBtn = document.getElementById('reset');
+const fullscreenBtn = document.getElementById('fullscreen');
 const mineCounterEl = document.getElementById('mine-count');
 const modeButtons = document.querySelectorAll('.mode-btn');
 
@@ -161,9 +162,30 @@ function updateMineCounter() {
 }
 
 function updateBoardSizing() {
-  const safeMin = cols >= 20 ? 10 : cols >= 12 ? 18 : 26;
-  boardEl.style.gridTemplateColumns = `repeat(${cols}, minmax(${safeMin}px, 1fr))`;
-  boardEl.style.width = cols >= 20 ? 'min(96vw, 620px)' : cols >= 12 ? 'min(96vw, 760px)' : 'min(90vw, 620px)';
+  if (currentMode !== 'hard') {
+    const safeMin = cols >= 20 ? 10 : cols >= 12 ? 18 : 26;
+    boardEl.style.gridTemplateColumns = `repeat(${cols}, minmax(${safeMin}px, 1fr))`;
+    boardEl.style.width = cols >= 20 ? 'min(96vw, 620px)' : cols >= 12 ? 'min(96vw, 760px)' : 'min(90vw, 620px)';
+    boardEl.style.height = 'auto';
+    return;
+  }
+
+  const gap = 2;
+  const horizontalPadding = document.fullscreenElement ? 22 : 40;
+  const verticalPadding = document.fullscreenElement ? 120 : 160;
+  const cellSize = Math.max(8, Math.min(
+    (window.innerWidth - horizontalPadding) / cols,
+    (window.innerHeight - verticalPadding) / rows
+  ));
+
+  const boardWidth = cols * cellSize + (cols - 1) * gap;
+  const boardHeight = rows * cellSize + (rows - 1) * gap;
+
+  boardEl.style.gridTemplateColumns = `repeat(${cols}, ${cellSize}px)`;
+  boardEl.style.gridTemplateRows = `repeat(${rows}, ${cellSize}px)`;
+  boardEl.style.width = `${boardWidth}px`;
+  boardEl.style.height = `${boardHeight}px`;
+  boardEl.style.maxWidth = '100%';
 }
 
 function buildBoardUI() {
@@ -464,8 +486,19 @@ document.addEventListener('keydown', (event) => {
 });
 
 resetBtn.addEventListener('click', resetGame);
+fullscreenBtn.addEventListener('click', async () => {
+  if (!document.fullscreenElement) {
+    await document.documentElement.requestFullscreen().catch(() => {});
+  } else {
+    await document.exitFullscreen().catch(() => {});
+  }
+});
+
 modeButtons.forEach((button) => {
   button.addEventListener('click', () => setMode(button.dataset.mode));
 });
+
+document.addEventListener('fullscreenchange', updateBoardSizing);
+window.addEventListener('resize', updateBoardSizing);
 
 resetGame();

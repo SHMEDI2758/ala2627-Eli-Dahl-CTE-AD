@@ -31,10 +31,17 @@
   </header>
 
   <main class="cards">
-    <section class="card feature">
-      <h2>Jump game</h2>
-      <button id="action" type="button">Jump</button>
-      <p id="output">The cube is waiting to jump.</p>
+    <section class="game-panel">
+      <div class="hud">
+        <span id="score">Score: 0</span>
+        <button id="action" type="button">Jump</button>
+      </div>
+
+      <div id="game" aria-label="Geometry Dash style game area">
+        <div id="player"></div>
+      </div>
+
+      <p id="output">Press Jump or Space to start.</p>
     </section>
   </main>
 

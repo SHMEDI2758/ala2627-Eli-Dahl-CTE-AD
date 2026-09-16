@@ -1,23 +1,20 @@
-/* styles.css — the look of your Week 8 project.
-   Last week's CSS is all here: variables, flexbox, a spacing scale, and states. */
+/* styles.css — the look of your Week 8 project. */
 
-/* ── DAY 1 · TODO 5: your colours ─────────────────────────────────────────
-   Change these two to colours YOU picked. Everything on the page uses them. */
 :root {
   --main: #28536b;
-  /* the background of the header and the button */
   --accent: #a8dadc;
-  /* the colour that pops */
   --text: #13182a;
   --paper: #f7f8fb;
-
-  /* the spacing scale: use only these three */
   --space-s: 8px;
   --space-m: 16px;
   --space-l: 32px;
+  --game-back: #101b2a;
+  --game-sky: #263b5e;
+  --player: #7ef29a;
+  --danger: #ff5d73;
+  --ground: #2ecc71;
 }
 
-/* ── the page ───────────────────────────────────────────────────────────── */
 * {
   box-sizing: border-box;
 }
@@ -57,33 +54,28 @@ body {
   opacity: 0.85;
 }
 
-/* ── the cards: flexbox from Week 7 ─────────────────────────────────────── */
 .cards {
   display: flex;
-  flex-wrap: wrap;
-  gap: var(--space-m);
+  justify-content: center;
   padding: var(--space-l) var(--space-m);
-  max-width: 1000px;
-  margin: 0 auto;
 }
 
-.card {
-  flex: 1 1 260px;
+.game-panel {
+  width: min(90vw, 900px);
   background: white;
-  border-radius: 14px;
-  padding: var(--space-m);
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+  border-radius: 18px;
+  padding: 20px;
+  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.12);
 }
 
-.card h2 {
-  margin-top: 0;
+.hud {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+  font-weight: 700;
 }
 
-.feature {
-  border-top: 6px solid var(--accent);
-}
-
-/* ── the button, with its states ────────────────────────────────────────── */
 #action {
   font: inherit;
   font-weight: 700;
@@ -91,14 +83,57 @@ body {
   background: var(--main);
   border: 0;
   border-radius: 10px;
-  padding: var(--space-s) var(--space-m);
+  padding: 10px 18px;
   cursor: pointer;
 }
 
-/* DAY 4: give your button a hover state and a focus state here */
+#action:hover,
+#action:focus-visible {
+  filter: brightness(1.08);
+}
+
+#game {
+  position: relative;
+  width: 100%;
+  height: 260px;
+  background: linear-gradient(180deg, var(--game-sky), var(--game-back));
+  border-radius: 16px;
+  overflow: hidden;
+  border: 3px solid rgba(255, 255, 255, 0.2);
+}
+
+#game::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 22px;
+  background: var(--ground);
+}
+
+#player {
+  position: absolute;
+  left: 70px;
+  bottom: 22px;
+  width: 34px;
+  height: 34px;
+  background: var(--player);
+  border-radius: 8px;
+  box-shadow: 0 0 20px rgba(126, 242, 154, 0.8);
+}
+
+.obstacle {
+  position: absolute;
+  bottom: 22px;
+  width: 28px;
+  background: var(--danger);
+  border-radius: 6px 6px 0 0;
+}
 
 #output {
-  font-size: 1.2rem;
+  margin: 14px 0 0;
+  font-size: 1.1rem;
   font-weight: 700;
 }
 

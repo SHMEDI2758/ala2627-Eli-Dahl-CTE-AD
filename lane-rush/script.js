@@ -152,6 +152,7 @@ function draw() {
   drawRoad();
   game.obstacles.forEach(drawObstacle);
   drawPlayer();
+  if (window.hitboxMode) window.hitboxMode.draw(context, road, game, laneCount);
   if (game.paused) drawPauseLayer();
 }
 

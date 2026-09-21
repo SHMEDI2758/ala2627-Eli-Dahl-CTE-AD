@@ -284,6 +284,23 @@ kbd {
   color: var(--acid);
 }
 
+.hitbox-button {
+  padding: 0;
+  color: var(--muted);
+  border: 0;
+  background: transparent;
+  font-family: "DM Mono", monospace;
+  font-size: .6rem;
+  letter-spacing: .04em;
+  text-transform: uppercase;
+}
+
+.hitbox-button:hover,
+.hitbox-button:focus-visible,
+.hitbox-button[aria-pressed="true"] {
+  color: var(--orange);
+}
+
 .status-live {
   color: var(--ink);
 }

@@ -4,6 +4,7 @@ const gameMessage = document.querySelector("#game-message");
 const messageTitle = document.querySelector("#message-title");
 const messageCopy = document.querySelector("#message-copy");
 const startButton = document.querySelector("#start-button");
+const fullscreenButton = document.querySelector("#fullscreen-button");
 const scoreReadout = document.querySelector("#score");
 const speedReadout = document.querySelector("#speed");
 const bestReadout = document.querySelector("#best");
@@ -87,7 +88,20 @@ function spawnObstacle() {
   const lane = Math.floor(Math.random() * laneCount);
   const lastObstacle = game.obstacles[game.obstacles.length - 1];
   if (lastObstacle && lastObstacle.lane === lane && lastObstacle.y < 120) return;
+  if (!hasSafeLane(lane)) return;
   game.obstacles.push({ lane, y: -100, color: laneColors[Math.floor(Math.random() * laneColors.length)] });
+}
+
+function hasSafeLane(nextLane) {
+  const dangerStart = road.height - 270;
+  const dangerEnd = road.height + 80;
+  const occupiedLanes = new Set(
+    game.obstacles
+      .filter((obstacle) => obstacle.y > dangerStart && obstacle.y < dangerEnd)
+      .map((obstacle) => obstacle.lane),
+  );
+  occupiedLanes.add(nextLane);
+  return occupiedLanes.size < laneCount;
 }
 
 function gameLoop(time) {
@@ -214,6 +228,19 @@ function drawPauseLayer() {
 }
 
 window.addEventListener("resize", resizeCanvas);
+fullscreenButton.addEventListener("click", async () => {
+  if (document.fullscreenElement) {
+    await document.exitFullscreen();
+  } else {
+    await document.querySelector(".game-frame").requestFullscreen();
+  }
+});
+document.addEventListener("fullscreenchange", () => {
+  const isFullscreen = Boolean(document.fullscreenElement);
+  fullscreenButton.textContent = isFullscreen ? "⛶ exit fullscreen" : "⛶ fullscreen";
+  fullscreenButton.setAttribute("aria-label", isFullscreen ? "Exit fullscreen" : "Enter fullscreen");
+  resizeCanvas();
+});
 window.addEventListener("keydown", (event) => {
   if (["ArrowLeft", "ArrowRight", "a", "d", "p", "P", " "].includes(event.key)) event.preventDefault();
   if (event.key === "ArrowLeft" || event.key.toLowerCase() === "a") movePlayer(-1);

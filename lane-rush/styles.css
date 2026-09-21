@@ -268,6 +268,22 @@ kbd {
   font-size: .9rem;
 }
 
+.fullscreen-button {
+  padding: 0;
+  color: var(--muted);
+  border: 0;
+  background: transparent;
+  font-family: "DM Mono", monospace;
+  font-size: .6rem;
+  letter-spacing: .04em;
+  text-transform: uppercase;
+}
+
+.fullscreen-button:hover,
+.fullscreen-button:focus-visible {
+  color: var(--acid);
+}
+
 .status-live {
   color: var(--ink);
 }
@@ -276,6 +292,19 @@ kbd {
   width: 6px;
   height: 6px;
   margin-right: 4px;
+}
+
+.game-frame:fullscreen {
+  display: flex;
+  flex-direction: column;
+  width: 100vw;
+  height: 100vh;
+  background: var(--panel);
+}
+
+.game-frame:fullscreen .canvas-wrap {
+  flex: 1;
+  height: auto;
 }
 
 .side-panel {

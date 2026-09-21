@@ -14,7 +14,7 @@
   <link rel="stylesheet" href="styles.css">
 </head>
 
-<body>
+<body data-mode="main">
   <main class="game-shell">
     <header class="topbar">
       <a class="brand" href="../">LANE<span>RUSH</span></a>
@@ -50,7 +50,7 @@
           <span><i class="key-icon">⏸</i> press P to pause</span>
           <button class="fullscreen-button" id="fullscreen-button" type="button" aria-label="Enter fullscreen">⛶
             fullscreen</button>
-          <a class="hitbox-link" href="hitbox-mode.html">□ hitbox mode</a>
+          <a class="hitbox-link" href="index.html?mode=hitbox">□ hitbox mode</a>
           <span class="status-live"><i></i> live run</span>
         </div>
       </div>
@@ -78,6 +78,7 @@
     </section>
   </main>
   <script src="script.js"></script>
+  <script src="hitbox-mode.js"></script>
 </body>
 
 </html>

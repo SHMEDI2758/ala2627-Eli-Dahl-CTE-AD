@@ -1,5 +1,6 @@
 const hitboxMode = {
-  enabled: true,
+  enabled: document.body.dataset.mode === "hitbox"
+    || new URLSearchParams(window.location.search).get("mode") === "hitbox",
 
   draw(context, road, game, laneCount) {
     if (!this.enabled) return;
@@ -16,6 +17,35 @@ const hitboxMode = {
   },
 };
 
+
+  const modeLink = document.querySelector(".hitbox-link");
+  const isSinglePageMode = modeLink && new URL(modeLink.href, window.location.href).pathname === window.location.pathname;
+
+  function updateModeLink() {
+    if (!isSinglePageMode) return;
+    modeLink.href = hitboxMode.enabled ? "index.html" : "index.html?mode=hitbox";
+    modeLink.textContent = hitboxMode.enabled ? "□ main game" : "□ hitbox mode";
+  }
+
+  if (isSinglePageMode) {
+    modeLink.addEventListener("click", (event) => {
+      const targetUrl = new URL(modeLink.href, window.location.href);
+      event.preventDefault();
+      const nextMode = targetUrl.searchParams.get("mode") === "hitbox" ? "hitbox" : "main";
+      window.history.pushState({ mode: nextMode }, "", targetUrl);
+      hitboxMode.enabled = nextMode === "hitbox";
+      document.body.dataset.mode = nextMode;
+      updateModeLink();
+    });
+  }
+
+  window.addEventListener("popstate", () => {
+    hitboxMode.enabled = new URLSearchParams(window.location.search).get("mode") === "hitbox";
+    document.body.dataset.mode = hitboxMode.enabled ? "hitbox" : "main";
+    updateModeLink();
+  });
+
+  updateModeLink();
 function drawPlayerHitbox(context, road, game) {
   const width = road.laneWidth * 0.54;
   const x = road.left + road.laneWidth * game.playerX + (road.laneWidth - width) / 2;

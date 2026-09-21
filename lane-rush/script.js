@@ -66,6 +66,8 @@ function startGame() {
   animationFrame = requestAnimationFrame(gameLoop);
 }
 
+window.addEventListener("lane-rush-mode-change", startGame);
+
 function endGame() {
   game.active = false;
   const finalScore = Math.floor(game.distance);
@@ -150,7 +152,7 @@ function update(delta) {
 function updateHud() {
   game.best = loadBestScore();
   scoreReadout.textContent = String(Math.floor(game.distance)).padStart(4, "0");
-  bestReadout.textContent = String(Math.max(game.best, Math.floor(game.distance))).padStart(4, "0");
+  bestReadout.textContent = String(game.best).padStart(4, "0");
   speedReadout.textContent = game.speed.toFixed(1);
   levelReadout.textContent = String(game.level).padStart(2, "0");
   const levelProgress = game.distance % 100;

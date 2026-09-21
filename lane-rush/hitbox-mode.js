@@ -36,6 +36,7 @@ const hitboxMode = {
       hitboxMode.enabled = nextMode === "hitbox";
       document.body.dataset.mode = nextMode;
       updateModeLink();
+      window.dispatchEvent(new Event("lane-rush-mode-change"));
     });
   }
 
@@ -43,6 +44,7 @@ const hitboxMode = {
     hitboxMode.enabled = new URLSearchParams(window.location.search).get("mode") === "hitbox";
     document.body.dataset.mode = hitboxMode.enabled ? "hitbox" : "main";
     updateModeLink();
+    window.dispatchEvent(new Event("lane-rush-mode-change"));
   });
 
   updateModeLink();

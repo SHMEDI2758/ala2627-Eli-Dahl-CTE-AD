@@ -284,21 +284,43 @@ kbd {
   color: var(--acid);
 }
 
-.hitbox-button {
+.hitbox-link {
   padding: 0;
   color: var(--muted);
-  border: 0;
   background: transparent;
   font-family: "DM Mono", monospace;
   font-size: .6rem;
   letter-spacing: .04em;
+  text-decoration: none;
   text-transform: uppercase;
 }
 
-.hitbox-button:hover,
-.hitbox-button:focus-visible,
-.hitbox-button[aria-pressed="true"] {
+.hitbox-link:hover,
+.hitbox-link:focus-visible {
   color: var(--orange);
+}
+
+.hitbox-legend {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.legend-swatch {
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  border: 2px solid;
+}
+
+.legend-swatch--player {
+  border-color: var(--acid);
+  background: rgba(215, 245, 107, .35);
+}
+
+.legend-swatch--obstacle {
+  border-color: var(--orange);
+  background: rgba(244, 127, 72, .35);
 }
 
 .status-live {

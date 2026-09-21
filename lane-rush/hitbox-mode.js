@@ -19,7 +19,7 @@ const hitboxMode = {
 
 
   const modeLink = document.querySelector(".hitbox-link");
-  const isSinglePageMode = modeLink && new URL(modeLink.href, window.location.href).pathname === window.location.pathname;
+  const isSinglePageMode = modeLink && document.body.dataset.mode === "main";
 
   function updateModeLink() {
     if (!isSinglePageMode) return;

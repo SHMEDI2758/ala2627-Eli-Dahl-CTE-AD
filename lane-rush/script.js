@@ -19,6 +19,16 @@ let lastTime = 0;
 let road = { width: 0, height: 0, left: 0, laneWidth: 0 };
 let game = createGameState();
 
+function getBestStorageKey() {
+  const hitboxMode = document.body.dataset.mode === "hitbox"
+    || new URLSearchParams(window.location.search).get("mode") === "hitbox";
+  return hitboxMode ? "lane-rush-hitbox-best" : "lane-rush-best";
+}
+
+function loadBestScore() {
+  return Number(localStorage.getItem(getBestStorageKey()) || 0);
+}
+
 function createGameState() {
   return {
     active: false,
@@ -30,7 +40,7 @@ function createGameState() {
     level: 1,
     speed: 1,
     spawnTimer: 0,
-    best: Number(localStorage.getItem("lane-rush-best") || 0),
+    best: loadBestScore(),
   };
 }
 
@@ -61,7 +71,7 @@ function endGame() {
   const finalScore = Math.floor(game.distance);
   if (finalScore > game.best) {
     game.best = finalScore;
-    localStorage.setItem("lane-rush-best", String(finalScore));
+    localStorage.setItem(getBestStorageKey(), String(finalScore));
   }
   messageTitle.textContent = "Traffic got you.";
   messageCopy.innerHTML = `You covered <strong>${String(finalScore).padStart(4, "0")}m</strong>. Find a new line and try again.`;
@@ -138,6 +148,7 @@ function update(delta) {
 }
 
 function updateHud() {
+  game.best = loadBestScore();
   scoreReadout.textContent = String(Math.floor(game.distance)).padStart(4, "0");
   bestReadout.textContent = String(Math.max(game.best, Math.floor(game.distance))).padStart(4, "0");
   speedReadout.textContent = game.speed.toFixed(1);

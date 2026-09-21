@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Lane Rush is a fast browser game about dodging traffic and surviving the climb.">
+  <title>Lane Rush | Dodge the traffic</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Space+Grotesk:wght@500;600;700&display=swap"
+    rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+  <main class="game-shell">
+    <header class="topbar">
+      <a class="brand" href="../">LANE<span>RUSH</span></a>
+      <p class="topbar-note"><span class="signal-dot"></span> traffic control online</p>
+    </header>
+
+    <section class="intro" aria-labelledby="game-title">
+      <div>
+        <p class="eyebrow">endless highway / 01</p>
+        <h1 id="game-title">Keep your lane.<br><em>Beat the clock.</em></h1>
+      </div>
+      <p class="intro-copy">Switch lanes, thread the gaps, and stay ahead of a road that never stops speeding up.</p>
+    </section>
+
+    <section class="game-layout" aria-label="Lane Rush game">
+      <div class="game-frame">
+        <div class="hud">
+          <div class="hud-item"><span>distance</span><strong id="score">0000</strong><small>m</small></div>
+          <div class="hud-item hud-item--center"><span>speed</span><strong id="speed">1.0</strong><small>x</small></div>
+          <div class="hud-item hud-item--right"><span>best</span><strong id="best">0000</strong><small>m</small></div>
+        </div>
+        <div class="canvas-wrap">
+          <canvas id="game-canvas" aria-label="Driving game. Use the arrow keys or A and D to change lanes."></canvas>
+          <div class="game-message" id="game-message">
+            <p class="message-kicker">ready when you are</p>
+            <h2 id="message-title">Find the gap.</h2>
+            <p id="message-copy">Use <kbd>←</kbd> <kbd>→</kbd> or <kbd>A</kbd> <kbd>D</kbd> to move.</p>
+            <button class="primary-button" id="start-button" type="button">Start engine <span>↗</span></button>
+          </div>
+        </div>
+        <div class="game-footer">
+          <span><i class="key-icon">↔</i> switch lanes</span>
+          <span><i class="key-icon">⏸</i> press P to pause</span>
+          <span class="status-live"><i></i> live run</span>
+        </div>
+      </div>
+
+      <aside class="side-panel">
+        <div class="panel-block">
+          <p class="panel-label">run status</p>
+          <div class="level-readout"><strong id="level">01</strong><span>level<br>reached</span></div>
+          <div class="progress-track"><span id="progress-bar"></span></div>
+          <p class="progress-caption"><span id="next-level">100</span>m to next level</p>
+        </div>
+        <div class="panel-block tips-block">
+          <p class="panel-label">driver notes</p>
+          <ul>
+            <li>Obstacles arrive in every lane.</li>
+            <li>Passing an obstacle adds distance.</li>
+            <li>Every level makes traffic faster.</li>
+          </ul>
+        </div>
+        <div class="panel-block panel-block--accent">
+          <p class="panel-label">survival tip</p>
+          <p class="tip-quote">“Look ahead. The safest lane is always the one you can see.”</p>
+        </div>
+      </aside>
+    </section>
+  </main>
+  <script src="script.js"></script>
+</body>
+
+</html>

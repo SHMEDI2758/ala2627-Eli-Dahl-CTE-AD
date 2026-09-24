@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Focus Flow</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+
+<body>
+  <div class="app-shell">
+    <header class="topbar">
+      <div>
+        <p class="eyebrow">Study & focus tool</p>
+        <h1>Focus Flow</h1>
+      </div>
+      <a class="back-link" href="../index.html">← Back to portfolio</a>
+    </header>
+
+    <main class="layout">
+      <section class="panel timer-panel">
+        <div class="timer-header">
+          <span class="status-pill">Session</span>
+          <span id="sessionLabel">Deep work</span>
+        </div>
+
+        <div class="timer-display" aria-live="polite">
+          <span id="minutes">25</span>
+          <span class="colon">:</span>
+          <span id="seconds">00</span>
+        </div>
+
+        <div class="quick-picks" aria-label="Quick session lengths">
+          <button class="quick-btn" data-minutes="15">15</button>
+          <button class="quick-btn active" data-minutes="25">25</button>
+          <button class="quick-btn" data-minutes="45">45</button>
+        </div>
+
+        <div class="timer-actions">
+          <button id="startBtn" class="primary-btn">Start</button>
+          <button id="pauseBtn" class="secondary-btn">Pause</button>
+          <button id="resetBtn" class="ghost-btn">Reset</button>
+        </div>
+      </section>
+
+      <section class="panel tasks-panel">
+        <div class="section-header">
+          <h2>Today’s plan</h2>
+          <span id="taskCounter" class="count-pill">0 tasks</span>
+        </div>
+
+        <form id="taskForm" class="task-form">
+          <input id="taskInput" type="text" maxlength="60" placeholder="Add a task..." aria-label="Task name"
+            required />
+          <select id="taskDuration" aria-label="Task duration">
+            <option value="15">15 min</option>
+            <option value="25" selected>25 min</option>
+            <option value="45">45 min</option>
+            <option value="60">60 min</option>
+          </select>
+          <button type="submit" class="primary-btn small">Add</button>
+        </form>
+
+        <ul id="taskList" class="task-list" aria-live="polite"></ul>
+      </section>
+    </main>
+
+    <aside class="stats-row">
+      <div class="stat-card">
+        <span class="stat-label">Completed</span>
+        <strong id="completedCount">0</strong>
+      </div>
+      <div class="stat-card">
+        <span class="stat-label">Focus time</span>
+        <strong id="focusMinutes">0 min</strong>
+      </div>
+      <div class="stat-card">
+        <span class="stat-label">Goal</span>
+        <strong id="goalText">2 tasks</strong>
+      </div>
+    </aside>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+
+</html>

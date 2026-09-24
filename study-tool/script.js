@@ -16,12 +16,18 @@ const startBtn = document.getElementById('startBtn');
 const pauseBtn = document.getElementById('pauseBtn');
 const resetBtn = document.getElementById('resetBtn');
 const quickButtons = document.querySelectorAll('.quick-btn');
+const timerPanel = document.querySelector('.timer-panel');
 
 let tasks = loadTasks();
 let timerDuration = 25 * 60;
 let timeLeft = timerDuration;
 let timerInterval = null;
 let isRunning = false;
+
+function updateTimerState() {
+  timerPanel.classList.toggle('running', isRunning);
+  startBtn.textContent = isRunning ? 'Running' : 'Start';
+}
 
 function loadTasks() {
   const raw = localStorage.getItem(STORAGE_KEY);
@@ -122,6 +128,9 @@ function addTask(event) {
 
   taskInput.value = '';
   taskDuration.value = '25';
+  taskForm.classList.remove('success-bump');
+  void taskForm.offsetWidth;
+  taskForm.classList.add('success-bump');
   renderTasks();
 }
 
@@ -150,6 +159,7 @@ function setTimer(minutes) {
   isRunning = false;
   clearInterval(timerInterval);
   timerInterval = null;
+  updateTimerState();
   updateTimerDisplay();
   sessionLabel.textContent = `${minutes} minute focus`;
   quickButtons.forEach((button) => {
@@ -162,8 +172,8 @@ function tick() {
     clearInterval(timerInterval);
     timerInterval = null;
     isRunning = false;
+    updateTimerState();
     sessionLabel.textContent = 'Session complete';
-    startBtn.textContent = 'Start';
 
     if ('Notification' in window && Notification.permission === 'granted') {
       new Notification('Focus session complete!');
@@ -188,7 +198,7 @@ function startTimer() {
   }
 
   isRunning = true;
-  startBtn.textContent = 'Running';
+  updateTimerState();
   timerInterval = setInterval(tick, 1000);
 }
 
@@ -196,7 +206,8 @@ function pauseTimer() {
   isRunning = false;
   clearInterval(timerInterval);
   timerInterval = null;
-  startBtn.textContent = 'Resume';
+  updateTimerState();
+  sessionLabel.textContent = 'Paused';
 }
 
 function resetTimer() {
@@ -204,8 +215,9 @@ function resetTimer() {
   timerInterval = null;
   isRunning = false;
   timeLeft = timerDuration;
-  startBtn.textContent = 'Start';
+  updateTimerState();
   updateTimerDisplay();
+  sessionLabel.textContent = `${Math.floor(timerDuration / 60)} minute focus`;
 }
 
 quickButtons.forEach((button) => {

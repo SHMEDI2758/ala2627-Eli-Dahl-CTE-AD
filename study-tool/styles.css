@@ -32,6 +32,17 @@ body {
     radial-gradient(circle at bottom right, rgba(16, 185, 129, 0.18), transparent 30%),
     linear-gradient(135deg, #020817, #0f172a 55%, #111827);
   color: var(--text);
+  animation: bgShift 14s ease-in-out infinite alternate;
+}
+
+@keyframes bgShift {
+  0% {
+    background-position: 0% 50%;
+  }
+
+  100% {
+    background-position: 100% 50%;
+  }
 }
 
 button,
@@ -85,10 +96,49 @@ h1 {
   border-radius: 24px;
   box-shadow: var(--shadow);
   backdrop-filter: blur(10px);
+  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+}
+
+.panel:hover {
+  transform: translateY(-2px);
+  border-color: rgba(139, 92, 246, 0.45);
 }
 
 .timer-panel {
+  position: relative;
   padding: 28px 24px;
+  overflow: hidden;
+}
+
+.timer-panel::before {
+  content: "";
+  position: absolute;
+  inset: -30% auto auto -18%;
+  width: 180px;
+  height: 180px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(124, 58, 237, 0.22), transparent 70%);
+  opacity: 0;
+  transition: opacity 0.25s ease;
+}
+
+.timer-panel.running::before {
+  opacity: 1;
+  animation: pulseGlow 1.5s ease-in-out infinite;
+}
+
+@keyframes pulseGlow {
+
+  0%,
+  100% {
+    transform: scale(0.9);
+    opacity: 0.45;
+  }
+
+  50% {
+    transform: scale(1.15);
+    opacity: 0.9;
+  }
 }
 
 .timer-header,
@@ -114,6 +164,7 @@ h1 {
 }
 
 .timer-display {
+  position: relative;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -122,6 +173,12 @@ h1 {
   font-size: clamp(4rem, 10vw, 7rem);
   font-weight: 800;
   letter-spacing: -0.08em;
+  transition: transform 0.25s ease, text-shadow 0.25s ease;
+}
+
+.timer-panel.running .timer-display {
+  transform: scale(1.04);
+  text-shadow: 0 0 18px rgba(124, 58, 237, 0.6);
 }
 
 .colon {
@@ -142,7 +199,7 @@ h1 {
   border: none;
   border-radius: 12px;
   cursor: pointer;
-  transition: transform 0.15s ease, opacity 0.2s ease;
+  transition: transform 0.15s ease, opacity 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
 }
 
 .quick-btn {
@@ -153,10 +210,26 @@ h1 {
   border: 1px solid transparent;
 }
 
+.quick-btn:hover,
+.primary-btn:hover,
+.secondary-btn:hover,
+.ghost-btn:hover,
+.back-link:hover {
+  transform: translateY(-1px) scale(1.01);
+}
+
 .quick-btn.active {
   background: var(--accent-soft);
   border-color: rgba(124, 58, 237, 0.5);
   color: #efe8ff;
+  box-shadow: 0 8px 20px rgba(124, 58, 237, 0.18);
+}
+
+.primary-btn:active,
+.secondary-btn:active,
+.ghost-btn:active,
+.quick-btn:active {
+  transform: scale(0.98);
 }
 
 .timer-actions {
@@ -237,6 +310,18 @@ button:hover {
   gap: 12px;
 }
 
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateY(8px) scale(0.98);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
 .task-item {
   display: flex;
   align-items: center;
@@ -246,6 +331,14 @@ button:hover {
   border-radius: 16px;
   background: rgba(15, 23, 42, 0.8);
   border: 1px solid var(--border);
+  animation: slideIn 0.2s ease;
+  transition: transform 0.18s ease, border-color 0.18s ease, box-shadow 0.18s ease;
+}
+
+.task-item:hover {
+  transform: translateX(3px);
+  border-color: rgba(124, 58, 237, 0.4);
+  box-shadow: 0 8px 16px rgba(15, 23, 42, 0.18);
 }
 
 .task-main {
@@ -305,12 +398,23 @@ button:hover {
   opacity: 0.7;
 }
 
+.task-item.completed {
+  background: rgba(16, 185, 129, 0.1);
+  border-color: rgba(16, 185, 129, 0.35);
+}
+
 .task-delete {
   border: none;
   background: transparent;
   color: var(--muted);
   font-size: 1.2rem;
   cursor: pointer;
+  transition: transform 0.15s ease, color 0.15s ease;
+}
+
+.task-delete:hover {
+  color: #fca5a5;
+  transform: scale(1.2) rotate(10deg);
 }
 
 .stats-row {
@@ -339,6 +443,28 @@ button:hover {
   display: block;
   margin-top: 8px;
   font-size: clamp(1.3rem, 2vw, 2rem);
+}
+
+.task-form.success-bump {
+  animation: formBounce 0.28s ease;
+}
+
+@keyframes formBounce {
+  0% {
+    transform: translateY(0);
+  }
+
+  30% {
+    transform: translateY(-4px);
+  }
+
+  60% {
+    transform: translateY(2px);
+  }
+
+  100% {
+    transform: translateY(0);
+  }
 }
 
 @media (max-width: 760px) {

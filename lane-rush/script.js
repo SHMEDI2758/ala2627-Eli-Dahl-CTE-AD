@@ -11,11 +11,15 @@ const bestReadout = document.querySelector("#best");
 const levelReadout = document.querySelector("#level");
 const nextLevelReadout = document.querySelector("#next-level");
 const progressBar = document.querySelector("#progress-bar");
+const canvasWrap = document.querySelector(".canvas-wrap");
 
 const laneCount = 3;
 const laneColors = ["#d7f56b", "#f47f48", "#ee5c53"];
 let animationFrame;
 let lastTime = 0;
+let viewZoom = 1;
+let viewOffsetX = 0;
+let viewOffsetY = 0;
 let road = { width: 0, height: 0, left: 0, laneWidth: 0 };
 let game = createGameState();
 
@@ -60,6 +64,7 @@ function resizeCanvas() {
 
 function startGame() {
   game = createGameState();
+  resetViewZoom();
   game.active = true;
   gameMessage.classList.add("is-hidden");
   lastTime = performance.now();
@@ -90,9 +95,16 @@ function togglePause() {
   if (!game.active) return;
   game.paused = !game.paused;
   if (!game.paused) {
+    resetViewZoom();
     lastTime = performance.now();
     animationFrame = requestAnimationFrame(gameLoop);
   }
+}
+
+function resetViewZoom() {
+  viewZoom = 1;
+  viewOffsetX = 0;
+  viewOffsetY = 0;
 }
 
 function movePlayer(direction) {
@@ -167,6 +179,10 @@ function updateHud() {
 
 function draw() {
   context.clearRect(0, 0, road.width, road.height);
+  context.save();
+  context.translate(road.width / 2 + viewOffsetX, road.height / 2 + viewOffsetY);
+  context.scale(viewZoom, viewZoom);
+  context.translate(-road.width / 2, -road.height / 2);
   drawRoad();
   game.obstacles.forEach(drawObstacle);
   drawPlayer();
@@ -174,6 +190,7 @@ function draw() {
     window.hitboxMode.draw(context, road, game, laneCount, game.showDeathHitboxes);
   }
   if (game.paused) drawPauseLayer();
+  context.restore();
 }
 
 function drawRoad() {
@@ -249,6 +266,24 @@ function drawPauseLayer() {
 }
 
 window.addEventListener("resize", resizeCanvas);
+canvasWrap.addEventListener("wheel", (event) => {
+  if (!game.paused && !game.showDeathHitboxes) return;
+  event.preventDefault();
+
+  const bounds = canvas.getBoundingClientRect();
+  const pointerX = event.clientX - bounds.left;
+  const pointerY = event.clientY - bounds.top;
+  const nextZoom = Math.min(4, Math.max(1, viewZoom * Math.exp(-event.deltaY * 0.001)));
+  viewOffsetX = pointerX - road.width / 2 - ((pointerX - road.width / 2 - viewOffsetX) / viewZoom) * nextZoom;
+  viewOffsetY = pointerY - road.height / 2 - ((pointerY - road.height / 2 - viewOffsetY) / viewZoom) * nextZoom;
+  viewZoom = nextZoom;
+
+  if (viewZoom === 1) {
+    viewOffsetX = 0;
+    viewOffsetY = 0;
+  }
+  draw();
+}, { passive: false });
 fullscreenButton.addEventListener("click", async () => {
   if (document.fullscreenElement) {
     await document.exitFullscreen();

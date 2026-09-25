@@ -14,7 +14,6 @@ const progressBar = document.querySelector("#progress-bar");
 
 const laneCount = 3;
 const laneColors = ["#d7f56b", "#f47f48", "#ee5c53"];
-const deathFlashDuration = 1.1;
 let animationFrame;
 let lastTime = 0;
 let road = { width: 0, height: 0, left: 0, laneWidth: 0 };
@@ -39,7 +38,7 @@ function createGameState() {
     obstacles: [],
     distance: 0,
     roadOffset: 0,
-    deathFlash: 0,
+    showDeathHitboxes: false,
     level: 1,
     speed: 1,
     spawnTimer: 0,
@@ -74,7 +73,7 @@ window.addEventListener("lane-rush-mode-change", startGame);
 function endGame() {
   if (!game.active) return;
   game.active = false;
-  game.deathFlash = deathFlashDuration;
+  game.showDeathHitboxes = true;
   const finalScore = Math.floor(game.distance);
   if (finalScore > game.best) {
     game.best = finalScore;
@@ -125,9 +124,8 @@ function gameLoop(time) {
   const delta = Math.min((time - lastTime) / 1000, 0.05);
   lastTime = time;
   if (game.active && !game.paused) update(delta);
-  else if (game.deathFlash > 0) game.deathFlash = Math.max(0, game.deathFlash - delta);
   draw();
-  if (game.active || game.deathFlash > 0) animationFrame = requestAnimationFrame(gameLoop);
+  if (game.active) animationFrame = requestAnimationFrame(gameLoop);
 }
 
 function update(delta) {
@@ -173,10 +171,7 @@ function draw() {
   game.obstacles.forEach(drawObstacle);
   drawPlayer();
   if (window.hitboxMode) {
-    const deathFlash = game.deathFlash > 0;
-    const flashStep = Math.floor((deathFlashDuration - game.deathFlash) * 12);
-    const flashOpacity = flashStep % 2 === 0 ? 1 : 0.18;
-    window.hitboxMode.draw(context, road, game, laneCount, deathFlash, flashOpacity);
+    window.hitboxMode.draw(context, road, game, laneCount, game.showDeathHitboxes);
   }
   if (game.paused) drawPauseLayer();
 }

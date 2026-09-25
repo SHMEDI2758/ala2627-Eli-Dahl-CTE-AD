@@ -2,10 +2,11 @@ const hitboxMode = {
   enabled: document.body.dataset.mode === "hitbox"
     || new URLSearchParams(window.location.search).get("mode") === "hitbox",
 
-  draw(context, road, game, laneCount) {
-    if (!this.enabled) return;
+  draw(context, road, game, laneCount, force = false, opacity = 1) {
+    if (!this.enabled && !force) return;
 
     context.save();
+    context.globalAlpha *= opacity;
     context.lineWidth = 4;
     context.setLineDash([10, 5]);
     context.shadowBlur = 10;

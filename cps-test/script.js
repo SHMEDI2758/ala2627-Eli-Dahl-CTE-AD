@@ -1,4 +1,5 @@
 const durationButtons = document.querySelectorAll(".duration-button");
+const keyButtons = document.querySelectorAll(".key-bind");
 const clickTarget = document.querySelector("#clickTarget");
 const targetLabel = document.querySelector("#targetLabel");
 const targetHint = document.querySelector("#targetHint");
@@ -12,12 +13,69 @@ const lastResult = document.querySelector("#lastResult");
 const bestResult = document.querySelector("#bestResult");
 const bestDuration = document.querySelector("#bestDuration");
 const resultMessage = document.querySelector("#resultMessage");
+const keyStatus = document.querySelector("#keyStatus");
 
 let selectedDuration = 10;
 let clicks = 0;
 let startedAt = 0;
 let timerId;
 let isRunning = false;
+let assigningSlot = null;
+let keyBindings = loadKeyBindings();
+
+function loadKeyBindings() {
+  try {
+    const savedBindings = JSON.parse(localStorage.getItem("cps-test-keys"));
+    if (Array.isArray(savedBindings) && savedBindings.length === 2
+      && savedBindings.every((binding) => typeof binding === "string" && binding)) {
+      return savedBindings;
+    }
+  } catch {
+    return ["KeyA", "KeyD"];
+  }
+  return ["KeyA", "KeyD"];
+}
+
+function formatKey(code) {
+  if (code.startsWith("Key")) return code.slice(3);
+  if (code.startsWith("Digit")) return code.slice(5);
+  const labels = {
+    ArrowDown: "DOWN",
+    ArrowLeft: "LEFT",
+    ArrowRight: "RIGHT",
+    ArrowUp: "UP",
+    Enter: "ENTER",
+    NumpadEnter: "NUM ENTER",
+    Space: "SPACE",
+  };
+  return labels[code] || code.toUpperCase();
+}
+
+function updateKeyControls() {
+  keyButtons.forEach((button, index) => {
+    const isAssigning = assigningSlot === index;
+    const label = formatKey(keyBindings[index]);
+    button.textContent = isAssigning ? "..." : label;
+    button.disabled = isRunning;
+    button.classList.toggle("is-assigning", isAssigning);
+    button.setAttribute("aria-label", isAssigning
+      ? `Press a key for key ${index + 1}`
+      : `Change key ${index + 1}, currently ${label}`);
+  });
+}
+
+function assignKey(code) {
+  const currentBinding = keyBindings[assigningSlot];
+  const duplicateSlot = keyBindings.indexOf(code);
+  if (duplicateSlot !== -1 && duplicateSlot !== assigningSlot) {
+    keyBindings[duplicateSlot] = currentBinding;
+  }
+  keyBindings[assigningSlot] = code;
+  localStorage.setItem("cps-test-keys", JSON.stringify(keyBindings));
+  assigningSlot = null;
+  keyStatus.textContent = `Use ${formatKey(keyBindings[0])} or ${formatKey(keyBindings[1])} during a round.`;
+  updateKeyControls();
+}
 
 function getBestKey() {
   return `cps-test-best-${selectedDuration}`;
@@ -59,6 +117,7 @@ function startTest() {
   isRunning = true;
   clickTarget.classList.add("is-active");
   durationButtons.forEach((button) => { button.disabled = true; });
+  updateKeyControls();
   clickCount.textContent = "0";
   liveCps.textContent = "0.00";
   lastResult.textContent = "--";
@@ -86,6 +145,7 @@ function finishTest() {
   isRunning = false;
   clickTarget.classList.remove("is-active");
   durationButtons.forEach((button) => { button.disabled = false; });
+  updateKeyControls();
   testStatus.textContent = "ROUND COMPLETE";
   targetLabel.textContent = "Click here to go again";
   targetHint.textContent = "FIRST CLICK STARTS THE TIMER";
@@ -108,13 +168,51 @@ durationButtons.forEach((button) => {
   button.addEventListener("click", () => selectDuration(button));
 });
 
-clickTarget.addEventListener("click", () => {
-  if (!isRunning) startTest();
+keyButtons.forEach((button) => {
+  button.addEventListener("click", () => {
+    if (isRunning) return;
+    assigningSlot = Number(button.dataset.keySlot);
+    keyStatus.textContent = `Press a key for key ${assigningSlot + 1}, or Escape to cancel.`;
+    updateKeyControls();
+  });
+});
+
+function countClick() {
   clicks += 1;
   clickCount.textContent = String(clicks);
   liveCps.textContent = formatCps(clicks / Math.max((performance.now() - startedAt) / 1000, 0.001));
+}
+
+clickTarget.addEventListener("click", () => {
+  if (!isRunning) startTest();
+  countClick();
+});
+
+document.addEventListener("keydown", (event) => {
+  if (assigningSlot !== null) {
+    if (event.code === "Escape") {
+      event.preventDefault();
+      assigningSlot = null;
+      keyStatus.textContent = `Use ${formatKey(keyBindings[0])} or ${formatKey(keyBindings[1])} during a round.`;
+      updateKeyControls();
+      return;
+    }
+    if (event.repeat || event.code === "Unidentified"
+      || ["Alt", "Control", "Meta", "Shift", "Tab"].includes(event.key)) return;
+    event.preventDefault();
+    assignKey(event.code);
+    return;
+  }
+
+  if (!keyBindings.includes(event.code)) return;
+  event.preventDefault();
+  if (event.repeat) return;
+  if (!isRunning) startTest();
+  countClick();
 });
 
 roundLength.textContent = String(selectedDuration);
 timeLeft.textContent = `${selectedDuration}.0`;
+updateKeyControls();
+keyStatus.textContent = `Use ${formatKey(keyBindings[0])} or ${formatKey(keyBindings[1])} during a round.`;
 updateBest();

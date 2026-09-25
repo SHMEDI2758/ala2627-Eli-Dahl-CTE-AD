@@ -50,6 +50,16 @@
         <span id="targetHint" class="target-hint">FIRST CLICK STARTS THE TIMER</span>
       </button>
 
+      <div class="key-controls">
+        <div class="key-control-heading"><span>TEST KEYS</span><span>Click a keycap to change it</span></div>
+        <div class="key-binding-row" role="group" aria-label="Keyboard test keys">
+          <button class="key-bind" type="button" data-key-slot="0">A</button>
+          <span class="key-join" aria-hidden="true">+</span>
+          <button class="key-bind" type="button" data-key-slot="1">D</button>
+          <span id="keyStatus" class="key-status" aria-live="polite">Press either key during a round.</span>
+        </div>
+      </div>
+
       <div class="console-bottom">
         <div class="duration-control" role="group" aria-label="Test duration">
           <button class="duration-button" type="button" data-seconds="5" aria-pressed="false">5 sec</button>

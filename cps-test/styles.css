@@ -264,7 +264,8 @@ h1 em {
 }
 
 .click-target:focus-visible,
-.duration-button:focus-visible {
+.duration-button:focus-visible,
+.key-bind:focus-visible {
   outline: 2px solid var(--orange);
   outline-offset: 3px;
 }
@@ -298,6 +299,65 @@ h1 em {
 .target-hint {
   color: var(--muted);
   font-size: .58rem;
+}
+
+.key-controls {
+  display: grid;
+  gap: 10px;
+  padding: 16px 0;
+  border-bottom: 1px solid var(--line);
+}
+
+.key-control-heading {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  color: var(--muted);
+  font-family: var(--mono);
+  font-size: .64rem;
+  text-transform: uppercase;
+}
+
+.key-binding-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.key-bind {
+  display: grid;
+  width: 54px;
+  height: 42px;
+  flex: 0 0 auto;
+  place-items: center;
+  border: 1px solid #687968;
+  background: var(--panel-light);
+  color: var(--ink);
+  font-family: var(--mono);
+  font-size: .76rem;
+  cursor: pointer;
+}
+
+.key-bind.is-assigning {
+  border-color: var(--lime);
+  color: var(--lime);
+}
+
+.key-bind:disabled {
+  cursor: default;
+  opacity: .55;
+}
+
+.key-join {
+  color: var(--muted);
+  font-family: var(--mono);
+}
+
+.key-status {
+  margin-left: 4px;
+  color: var(--muted);
+  font-size: .72rem;
+  line-height: 1.4;
 }
 
 .console-bottom {
@@ -423,7 +483,6 @@ h1 em {
     flex: 1;
     padding: 0 5px;
   }
-
 }
 
 @media (prefers-reduced-motion: reduce) {

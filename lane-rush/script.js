@@ -156,10 +156,11 @@ function update(delta) {
   game.obstacles = game.obstacles.filter((obstacle) => obstacle.y < road.height + 130);
 
   const playerY = road.height - 100;
+  const playerHitboxTop = playerY - 32;
   const playerLane = Math.round(game.playerX);
   for (const obstacle of game.obstacles) {
     const laneMatch = obstacle.lane === playerLane;
-    const verticalMatch = obstacle.y + 64 > playerY && obstacle.y < playerY + 64;
+    const verticalMatch = obstacle.y + 64 > playerHitboxTop && obstacle.y < playerHitboxTop + 64;
     if (laneMatch && verticalMatch) endGame();
   }
   game.playerX += (game.playerLane - game.playerX) * Math.min(delta * 13, 1);

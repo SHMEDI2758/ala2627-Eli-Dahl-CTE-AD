@@ -263,14 +263,8 @@ h1 em {
   transform: scale(.985);
 }
 
-.click-target:disabled {
-  color: var(--muted);
-  cursor: default;
-}
-
 .click-target:focus-visible,
-.duration-button:focus-visible,
-.start-button:focus-visible {
+.duration-button:focus-visible {
   outline: 2px solid var(--orange);
   outline-offset: 3px;
 }
@@ -313,13 +307,14 @@ h1 em {
 
 .duration-control {
   display: flex;
+  width: 100%;
   gap: 3px;
   padding: 3px;
   background: #17211d;
+  justify-content: space-between;
 }
 
-.duration-button,
-.start-button {
+.duration-button {
   min-height: 38px;
   border: 0;
   font-family: var(--mono);
@@ -336,23 +331,6 @@ h1 em {
 .duration-button.is-selected {
   background: var(--panel-light);
   color: var(--ink);
-}
-
-.start-button {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 12px;
-  padding: 0 16px;
-  background: var(--lime);
-  color: var(--page);
-  font-size: .74rem;
-  font-weight: 500;
-}
-
-.start-button span {
-  font-family: var(--display);
-  font-size: 1rem;
 }
 
 .result-strip {
@@ -446,9 +424,6 @@ h1 em {
     padding: 0 5px;
   }
 
-  .start-button {
-    width: 100%;
-  }
 }
 
 @media (prefers-reduced-motion: reduce) {

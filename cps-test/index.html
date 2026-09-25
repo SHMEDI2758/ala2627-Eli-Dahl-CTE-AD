@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#17211d">
+  <title>Click / Second</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Space+Grotesk:wght@400;500;600;700&display=swap"
+    rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+  <header class="topbar">
+    <a class="brand" href="../index.html"><span class="brand-mark">C</span> click / second</a>
+    <a class="back-link" href="../index.html">portfolio <span aria-hidden="true">↗</span></a>
+  </header>
+
+  <main class="test-layout">
+    <section class="test-intro" aria-labelledby="page-title">
+      <p class="eyebrow"><span class="live-dot"></span> input speed test</p>
+      <h1 id="page-title">How fast<br>can you <em>click?</em></h1>
+      <p class="intro-copy">Find your rhythm. See your clicks per second.</p>
+    </section>
+
+    <section class="test-console" aria-label="Click speed test">
+      <div class="console-topline">
+        <span id="testStatus" class="test-status">READY WHEN YOU ARE</span>
+        <span class="round-label">ROUND <span id="roundLength">10</span>S</span>
+      </div>
+
+      <div class="timer-row" aria-live="polite">
+        <span id="timeLeft" class="timer">10.0</span>
+        <span class="timer-unit">SECONDS LEFT</span>
+      </div>
+      <div class="time-track" aria-hidden="true"><span id="timeProgress"></span></div>
+
+      <div class="click-row">
+        <div class="click-stat"><span>CLICKS</span><strong id="clickCount">0</strong></div>
+        <div class="click-stat click-stat--rate"><span>LIVE CPS</span><strong id="liveCps">0.00</strong></div>
+      </div>
+
+      <button id="clickTarget" class="click-target" type="button" disabled>
+        <span class="target-ring" aria-hidden="true"><span></span></span>
+        <span id="targetLabel">Choose a time to begin</span>
+        <span class="target-hint">CLICK AS FAST AS YOU CAN</span>
+      </button>
+
+      <div class="console-bottom">
+        <div class="duration-control" role="group" aria-label="Test duration">
+          <button class="duration-button" type="button" data-seconds="5" aria-pressed="false">5 sec</button>
+          <button class="duration-button is-selected" type="button" data-seconds="10" aria-pressed="true">10
+            sec</button>
+          <button class="duration-button" type="button" data-seconds="15" aria-pressed="false">15 sec</button>
+          <button class="duration-button" type="button" data-seconds="30" aria-pressed="false">30 sec</button>
+        </div>
+        <button id="startButton" class="start-button" type="button">Start test <span
+            aria-hidden="true">→</span></button>
+      </div>
+    </section>
+
+    <section class="result-strip" aria-label="Your records">
+      <div class="result-item"><span>LAST RESULT</span><strong id="lastResult">--</strong></div>
+      <div class="result-item"><span>PERSONAL BEST <small id="bestDuration">10 SEC</small></span><strong
+          id="bestResult">--</strong></div>
+      <p id="resultMessage" class="result-message" aria-live="polite">Your best score is saved on this device.</p>
+    </section>
+  </main>
+
+  <script src="script.js"></script>
+</body>
+
+</html>

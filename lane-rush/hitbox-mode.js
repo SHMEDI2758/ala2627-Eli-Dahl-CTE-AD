@@ -52,7 +52,7 @@ const hitboxMode = {
 function drawPlayerHitbox(context, road, game) {
   const width = road.laneWidth * 0.54;
   const x = road.left + road.laneWidth * game.playerX + (road.laneWidth - width) / 2;
-  const y = road.height - 100;
+  const y = road.height - 132;
   context.strokeStyle = "#d7f56b";
   context.fillStyle = "rgba(215, 245, 107, .22)";
   context.shadowColor = "#d7f56b";

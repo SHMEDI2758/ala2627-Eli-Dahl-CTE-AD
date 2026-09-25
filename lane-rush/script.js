@@ -267,13 +267,13 @@ function drawPauseLayer() {
 
 window.addEventListener("resize", resizeCanvas);
 canvasWrap.addEventListener("wheel", (event) => {
-  if (!game.paused && !game.showDeathHitboxes) return;
+  if (!game.showDeathHitboxes || game.paused) return;
   event.preventDefault();
 
   const bounds = canvas.getBoundingClientRect();
   const pointerX = event.clientX - bounds.left;
   const pointerY = event.clientY - bounds.top;
-  const nextZoom = Math.min(4, Math.max(1, viewZoom * Math.exp(-event.deltaY * 0.001)));
+  const nextZoom = Math.min(4, Math.max(1, viewZoom * Math.exp(-event.deltaY * 0.002)));
   viewOffsetX = pointerX - road.width / 2 - ((pointerX - road.width / 2 - viewOffsetX) / viewZoom) * nextZoom;
   viewOffsetY = pointerY - road.height / 2 - ((pointerY - road.height / 2 - viewOffsetY) / viewZoom) * nextZoom;
   viewZoom = nextZoom;

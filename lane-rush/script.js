@@ -139,7 +139,7 @@ function update(delta) {
   }
 
   const obstacleSpeed = road.height * (0.34 + game.speed * 0.075);
-  game.roadOffset += delta * obstacleSpeed;
+  game.roadOffset += delta * obstacleSpeed * 0.5;
   game.obstacles.forEach((obstacle) => { obstacle.y += delta * obstacleSpeed; });
   game.obstacles = game.obstacles.filter((obstacle) => obstacle.y < road.height + 130);
 

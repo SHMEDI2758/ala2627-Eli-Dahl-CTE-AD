@@ -53,12 +53,12 @@ function drawPlayerHitbox(context, road, game) {
   const width = road.laneWidth * 0.54;
   const x = road.left + road.laneWidth * game.playerX + (road.laneWidth - width) / 2;
   const y = road.height - 132;
-  context.strokeStyle = "#d7f56b";
-  context.fillStyle = "rgba(215, 245, 107, .22)";
-  context.shadowColor = "#d7f56b";
+  context.strokeStyle = "#ffffff";
+  context.fillStyle = "rgba(255, 255, 255, .22)";
+  context.shadowColor = "#ffffff";
   context.fillRect(x, y, width, 64);
   context.strokeRect(x, y, width, 64);
-  context.fillStyle = "#efffb2";
+  context.fillStyle = "#ffffff";
   context.fillText("PLAYER", x + width / 2, y - 7);
 }
 

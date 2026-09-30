@@ -285,6 +285,7 @@ canvasWrap.addEventListener("wheel", (event) => {
     viewOffsetX = 0;
     viewOffsetY = 0;
   }
+  gameMessage.classList.toggle("is-hidden", viewZoom > 1);
   draw();
 }, { passive: false });
 fullscreenButton.addEventListener("click", async () => {

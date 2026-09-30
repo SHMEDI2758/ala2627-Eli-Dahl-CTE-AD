@@ -5,6 +5,7 @@ const messageTitle = document.querySelector("#message-title");
 const messageCopy = document.querySelector("#message-copy");
 const startButton = document.querySelector("#start-button");
 const fullscreenButton = document.querySelector("#fullscreen-button");
+const gameFrame = document.querySelector(".game-frame");
 const scoreReadout = document.querySelector("#score");
 const speedReadout = document.querySelector("#speed");
 const bestReadout = document.querySelector("#best");
@@ -20,6 +21,7 @@ let lastTime = 0;
 let viewZoom = 1;
 let viewOffsetX = 0;
 let viewOffsetY = 0;
+let fullscreenTransition = false;
 let road = { width: 0, height: 0, left: 0, laneWidth: 0 };
 let game = createGameState();
 
@@ -286,14 +288,22 @@ canvasWrap.addEventListener("wheel", (event) => {
   draw();
 }, { passive: false });
 fullscreenButton.addEventListener("click", async () => {
-  if (document.fullscreenElement) {
-    await document.exitFullscreen();
-  } else {
-    await document.querySelector(".game-frame").requestFullscreen();
+  if (fullscreenTransition) return;
+  fullscreenTransition = true;
+  try {
+    if (document.fullscreenElement === gameFrame) {
+      await document.exitFullscreen();
+    } else if (!document.fullscreenElement) {
+      await gameFrame.requestFullscreen();
+    }
+  } catch (error) {
+    console.warn("Unable to change Lane Rush fullscreen mode.", error);
+  } finally {
+    fullscreenTransition = false;
   }
 });
 document.addEventListener("fullscreenchange", () => {
-  const isFullscreen = Boolean(document.fullscreenElement);
+  const isFullscreen = document.fullscreenElement === gameFrame;
   fullscreenButton.textContent = isFullscreen ? "⛶ exit fullscreen" : "⛶ fullscreen";
   fullscreenButton.setAttribute("aria-label", isFullscreen ? "Exit fullscreen" : "Enter fullscreen");
   resizeCanvas();

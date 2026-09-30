@@ -20,6 +20,7 @@ let clicks = 0;
 let startedAt = 0;
 let timerId;
 let isRunning = false;
+let hasCompleted = false;
 let assigningSlot = null;
 let keyBindings = loadKeyBindings();
 
@@ -56,7 +57,7 @@ function updateKeyControls() {
     const isAssigning = assigningSlot === index;
     const label = formatKey(keyBindings[index]);
     button.textContent = isAssigning ? "..." : label;
-    button.disabled = isRunning;
+    button.disabled = isRunning || hasCompleted;
     button.classList.toggle("is-assigning", isAssigning);
     button.setAttribute("aria-label", isAssigning
       ? `Press a key for key ${index + 1}`
@@ -91,7 +92,7 @@ function updateBest() {
 }
 
 function selectDuration(button) {
-  if (isRunning) return;
+  if (isRunning || hasCompleted) return;
   selectedDuration = Number(button.dataset.seconds);
   durationButtons.forEach((option) => {
     const selected = option === button;
@@ -111,6 +112,7 @@ function selectDuration(button) {
 }
 
 function startTest() {
+  if (hasCompleted || isRunning) return;
   clearInterval(timerId);
   clicks = 0;
   startedAt = performance.now();
@@ -141,14 +143,17 @@ function updateTimer() {
 }
 
 function finishTest() {
+  if (!isRunning) return;
   clearInterval(timerId);
   isRunning = false;
+  hasCompleted = true;
   clickTarget.classList.remove("is-active");
-  durationButtons.forEach((button) => { button.disabled = false; });
+  durationButtons.forEach((button) => { button.disabled = true; });
+  clickTarget.disabled = true;
   updateKeyControls();
-  testStatus.textContent = "ROUND COMPLETE";
-  targetLabel.textContent = "Click here to go again";
-  targetHint.textContent = "FIRST CLICK STARTS THE TIMER";
+  testStatus.textContent = "TEST COMPLETE";
+  targetLabel.textContent = "Test complete";
+  targetHint.textContent = "RELOAD TO TAKE ANOTHER TEST";
   timeLeft.textContent = "0.0";
   timeProgress.style.transform = "scaleX(0)";
 
@@ -157,9 +162,9 @@ function finishTest() {
   lastResult.textContent = `${score} CPS`;
   if (Number(score) > previousBest) {
     localStorage.setItem(getBestKey(), score);
-    resultMessage.textContent = "New personal best. One more round?";
+    resultMessage.textContent = "New personal best.";
   } else {
-    resultMessage.textContent = "Score saved. Ready for another round?";
+    resultMessage.textContent = "Score saved.";
   }
   updateBest();
 }
@@ -178,6 +183,11 @@ keyButtons.forEach((button) => {
 });
 
 function countClick() {
+  if (!isRunning) return;
+  if (performance.now() - startedAt >= selectedDuration * 1000) {
+    finishTest();
+    return;
+  }
   clicks += 1;
   clickCount.textContent = String(clicks);
   liveCps.textContent = formatCps(clicks / Math.max((performance.now() - startedAt) / 1000, 0.001));
@@ -204,9 +214,8 @@ document.addEventListener("keydown", (event) => {
     return;
   }
 
-  if (!keyBindings.includes(event.code)) return;
+  if (!keyBindings.includes(event.code) || event.repeat || hasCompleted) return;
   event.preventDefault();
-  if (event.repeat) return;
   if (!isRunning) startTest();
   countClick();
 });

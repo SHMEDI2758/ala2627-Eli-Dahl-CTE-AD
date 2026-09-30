@@ -41,10 +41,14 @@ function formatKey(code) {
   if (code.startsWith("Key")) return code.slice(3);
   if (code.startsWith("Digit")) return code.slice(5);
   const labels = {
+    AltLeft: "ALT",
+    AltRight: "ALT",
     ArrowDown: "DOWN",
     ArrowLeft: "LEFT",
     ArrowRight: "RIGHT",
     ArrowUp: "UP",
+    ControlLeft: "CTRL",
+    ControlRight: "CTRL",
     Enter: "ENTER",
     NumpadEnter: "NUM ENTER",
     Space: "SPACE",
@@ -208,7 +212,7 @@ document.addEventListener("keydown", (event) => {
       return;
     }
     if (event.repeat || event.code === "Unidentified"
-      || ["Alt", "Control", "Meta", "Shift", "Tab"].includes(event.key)) return;
+      || ["Meta", "Shift", "Tab"].includes(event.key)) return;
     event.preventDefault();
     assignKey(event.code);
     return;

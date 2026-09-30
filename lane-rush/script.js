@@ -21,7 +21,6 @@ let lastTime = 0;
 let viewZoom = 1;
 let viewOffsetX = 0;
 let viewOffsetY = 0;
-let fullscreenTransition = false;
 let road = { width: 0, height: 0, left: 0, laneWidth: 0 };
 let game = createGameState();
 
@@ -107,6 +106,15 @@ function resetViewZoom() {
   viewZoom = 1;
   viewOffsetX = 0;
   viewOffsetY = 0;
+}
+
+function setGameFullscreen(isFullscreen) {
+  gameFrame.classList.toggle("is-fullscreen", isFullscreen);
+  document.body.classList.toggle("game-fullscreen", isFullscreen);
+  fullscreenButton.textContent = isFullscreen ? "⛶ exit fullscreen" : "⛶ fullscreen";
+  fullscreenButton.setAttribute("aria-label", isFullscreen ? "Exit fullscreen" : "Enter fullscreen");
+  resizeCanvas();
+  draw();
 }
 
 function movePlayer(direction) {
@@ -268,7 +276,10 @@ function drawPauseLayer() {
   context.fillText("PAUSED", road.width / 2, road.height / 2);
 }
 
-window.addEventListener("resize", resizeCanvas);
+window.addEventListener("resize", () => {
+  resizeCanvas();
+  draw();
+});
 canvasWrap.addEventListener("wheel", (event) => {
   if (!game.showDeathHitboxes || game.paused) return;
   event.preventDefault();
@@ -288,28 +299,14 @@ canvasWrap.addEventListener("wheel", (event) => {
   gameMessage.classList.toggle("is-hidden", viewZoom > 1);
   draw();
 }, { passive: false });
-fullscreenButton.addEventListener("click", async () => {
-  if (fullscreenTransition) return;
-  fullscreenTransition = true;
-  try {
-    if (document.fullscreenElement === gameFrame) {
-      await document.exitFullscreen();
-    } else if (!document.fullscreenElement) {
-      await gameFrame.requestFullscreen();
-    }
-  } catch (error) {
-    console.warn("Unable to change Lane Rush fullscreen mode.", error);
-  } finally {
-    fullscreenTransition = false;
-  }
-});
-document.addEventListener("fullscreenchange", () => {
-  const isFullscreen = document.fullscreenElement === gameFrame;
-  fullscreenButton.textContent = isFullscreen ? "⛶ exit fullscreen" : "⛶ fullscreen";
-  fullscreenButton.setAttribute("aria-label", isFullscreen ? "Exit fullscreen" : "Enter fullscreen");
-  resizeCanvas();
+fullscreenButton.addEventListener("click", () => {
+  setGameFullscreen(!gameFrame.classList.contains("is-fullscreen"));
 });
 window.addEventListener("keydown", (event) => {
+  if (event.key === "Escape" && gameFrame.classList.contains("is-fullscreen")) {
+    setGameFullscreen(false);
+    return;
+  }
   if (["ArrowLeft", "ArrowRight", "a", "d", "p", "P", " "].includes(event.key)) event.preventDefault();
   if (event.key === "ArrowLeft" || event.key.toLowerCase() === "a") movePlayer(-1);
   if (event.key === "ArrowRight" || event.key.toLowerCase() === "d") movePlayer(1);

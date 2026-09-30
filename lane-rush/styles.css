@@ -31,6 +31,10 @@ body {
     var(--night);
 }
 
+body.game-fullscreen {
+  overflow: hidden;
+}
+
 button,
 kbd {
   font: inherit;
@@ -333,16 +337,23 @@ kbd {
   margin-right: 4px;
 }
 
-.game-frame:fullscreen {
+.game-frame.is-fullscreen {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
   display: flex;
   flex-direction: column;
   width: 100vw;
   height: 100vh;
+  height: 100dvh;
   background: var(--panel);
+  border: 0;
+  box-shadow: none;
 }
 
-.game-frame:fullscreen .canvas-wrap {
+.game-frame.is-fullscreen .canvas-wrap {
   flex: 1;
+  min-height: 0;
   height: auto;
 }
 

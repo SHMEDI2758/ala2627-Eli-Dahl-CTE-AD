@@ -1,6 +1,8 @@
 const durationButtons = document.querySelectorAll(".duration-button");
 const keyButtons = document.querySelectorAll(".key-bind");
 const clickTarget = document.querySelector("#clickTarget");
+const stopButton = document.querySelector("#stopButton");
+const resetButton = document.querySelector("#resetButton");
 const targetLabel = document.querySelector("#targetLabel");
 const targetHint = document.querySelector("#targetHint");
 const testStatus = document.querySelector("#testStatus");
@@ -122,6 +124,7 @@ function startTest() {
   startedAt = performance.now();
   isRunning = true;
   clickTarget.classList.add("is-active");
+  stopButton.disabled = false;
   durationButtons.forEach((button) => { button.disabled = true; });
   updateKeyControls();
   clickCount.textContent = "0";
@@ -146,24 +149,32 @@ function updateTimer() {
   if (remaining <= 0) finishTest();
 }
 
-function finishTest() {
+function finishTest(stoppedEarly = false) {
   if (!isRunning) return;
+  const elapsed = Math.min((performance.now() - startedAt) / 1000, selectedDuration);
+  const wasStoppedEarly = stoppedEarly && elapsed < selectedDuration;
   clearInterval(timerId);
   isRunning = false;
   hasCompleted = true;
   clickTarget.classList.remove("is-active");
+  stopButton.disabled = true;
   durationButtons.forEach((button) => { button.disabled = true; });
   clickTarget.disabled = true;
   updateKeyControls();
-  testStatus.textContent = "TEST COMPLETE";
-  targetLabel.textContent = "Test complete";
-  targetHint.textContent = "RELOAD TO TAKE ANOTHER TEST";
-  timeLeft.textContent = "0.0";
-  timeProgress.style.transform = "scaleX(0)";
+  testStatus.textContent = wasStoppedEarly ? "TEST STOPPED" : "TEST COMPLETE";
+  targetLabel.textContent = wasStoppedEarly ? "Test stopped" : "Test complete";
+  targetHint.textContent = "RESET TO TAKE ANOTHER TEST";
+  timeLeft.textContent = (selectedDuration - elapsed).toFixed(1);
+  timeProgress.style.transform = `scaleX(${1 - elapsed / selectedDuration})`;
 
-  const score = formatCps(clicks / selectedDuration);
-  const previousBest = Number(localStorage.getItem(getBestKey()) || 0);
+  const score = formatCps(clicks / Math.max(elapsed, 0.001));
   lastResult.textContent = `${score} CPS`;
+  if (wasStoppedEarly) {
+    resultMessage.textContent = "Stopped early. Score not recorded as a personal best.";
+    return;
+  }
+
+  const previousBest = Number(localStorage.getItem(getBestKey()) || 0);
   if (Number(score) > previousBest) {
     localStorage.setItem(getBestKey(), score);
     resultMessage.textContent = "New personal best.";
@@ -173,9 +184,35 @@ function finishTest() {
   updateBest();
 }
 
+function resetTest() {
+  clearInterval(timerId);
+  clicks = 0;
+  startedAt = 0;
+  isRunning = false;
+  hasCompleted = false;
+  clickTarget.disabled = false;
+  clickTarget.classList.remove("is-active");
+  stopButton.disabled = true;
+  durationButtons.forEach((button) => { button.disabled = false; });
+  updateKeyControls();
+  clickCount.textContent = "0";
+  liveCps.textContent = "0.00";
+  lastResult.textContent = "--";
+  testStatus.textContent = "READY WHEN YOU ARE";
+  targetLabel.textContent = "Click here to start";
+  targetHint.textContent = "FIRST CLICK STARTS THE TIMER";
+  timeLeft.textContent = `${selectedDuration}.0`;
+  timeProgress.style.transform = "scaleX(1)";
+  resultMessage.textContent = "Your best score is saved on this device.";
+  updateBest();
+}
+
 durationButtons.forEach((button) => {
   button.addEventListener("click", () => selectDuration(button));
 });
+
+stopButton.addEventListener("click", () => finishTest(true));
+resetButton.addEventListener("click", resetTest);
 
 keyButtons.forEach((button) => {
   button.addEventListener("click", () => {

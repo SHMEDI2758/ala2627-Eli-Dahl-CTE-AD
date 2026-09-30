@@ -264,6 +264,7 @@ h1 em {
 }
 
 .click-target:focus-visible,
+.test-action:focus-visible,
 .duration-button:focus-visible,
 .key-bind:focus-visible {
   outline: 2px solid var(--orange);
@@ -299,6 +300,40 @@ h1 em {
 .target-hint {
   color: var(--muted);
   font-size: .58rem;
+}
+
+.test-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  padding-top: 10px;
+}
+
+.test-action {
+  min-height: 38px;
+  padding: 0 14px;
+  border: 1px solid var(--line);
+  background: transparent;
+  color: var(--ink);
+  font-family: var(--mono);
+  font-size: .72rem;
+  cursor: pointer;
+}
+
+.test-action--stop {
+  border-color: var(--orange);
+  color: var(--orange);
+}
+
+.test-action--reset {
+  border-color: var(--lime);
+  background: var(--lime);
+  color: var(--page);
+}
+
+.test-action:disabled {
+  cursor: default;
+  opacity: .45;
 }
 
 .key-controls {

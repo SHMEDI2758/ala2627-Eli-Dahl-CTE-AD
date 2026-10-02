@@ -45,6 +45,7 @@ function createGameState() {
     playerLane: 1,
     playerX: 1,
     hardSafeLane: 2,
+    hardWaveCounts: [0, 0, 0],
     obstacles: [],
     distance: 0,
     roadOffset: 0,
@@ -136,25 +137,19 @@ function spawnObstacle() {
     const approachingObstacles = game.obstacles.filter(
       (obstacle) => obstacle.y < road.height + 80,
     );
-    const approachingLanes = new Set(
-      approachingObstacles.map((obstacle) => obstacle.lane),
-    );
+    if (approachingObstacles.length === 0 && game.hardWaveCounts.some((count) => count > 0)) {
+      game.hardSafeLane = (game.hardSafeLane + 1) % laneCount;
+      game.hardWaveCounts = Array(laneCount).fill(0);
+    }
     const safeLanes = [];
     for (let candidateLane = 0; candidateLane < laneCount; candidateLane += 1) {
-      const followsRotation = approachingLanes.size === 0
-        ? candidateLane !== game.hardSafeLane
-        : approachingLanes.size === 1
-          ? candidateLane === game.hardSafeLane
-          : approachingLanes.has(candidateLane);
+      const followsRotation = candidateLane !== game.hardSafeLane;
       const overlapsSameLane = game.obstacles.some((obstacle) => (
         obstacle.lane === candidateLane && obstacle.y < 28
       ));
-      const laneTrafficCount = approachingObstacles.filter(
-        (obstacle) => obstacle.lane === candidateLane,
-      ).length;
       if (
         followsRotation
-        && laneTrafficCount < hardLaneObstacleLimit
+        && game.hardWaveCounts[candidateLane] < hardLaneObstacleLimit
         && !overlapsSameLane
         && hasSafeLane(candidateLane)
       ) {
@@ -163,22 +158,13 @@ function spawnObstacle() {
     }
     if (safeLanes.length === 0) return;
     lane = safeLanes[Math.floor(Math.random() * safeLanes.length)];
-    const occupiedAfterSpawn = new Set(approachingLanes);
-    occupiedAfterSpawn.add(lane);
-    if (occupiedAfterSpawn.size === 2) {
-      for (let candidateLane = 0; candidateLane < laneCount; candidateLane += 1) {
-        if (!occupiedAfterSpawn.has(candidateLane)) {
-          game.hardSafeLane = candidateLane;
-          break;
-        }
-      }
-    }
   } else {
     lane = Math.floor(Math.random() * laneCount);
     if (lastObstacle && lastObstacle.lane === lane && lastObstacle.y < 120) return;
     if (!hasSafeLane(lane)) return;
   }
   game.obstacles.push({ lane, y: -100, color: laneColors[Math.floor(Math.random() * laneColors.length)] });
+  if (hardMode) game.hardWaveCounts[lane] += 1;
 }
 
 function updateHardModeButton() {

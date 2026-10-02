@@ -16,6 +16,7 @@ const progressBar = document.querySelector("#progress-bar");
 const canvasWrap = document.querySelector(".canvas-wrap");
 
 const laneCount = 3;
+const hardLaneObstacleLimit = 2;
 const laneColors = ["#d7f56b", "#f47f48", "#ee5c53"];
 let animationFrame;
 let lastTime = 0;
@@ -132,10 +133,11 @@ function spawnObstacle() {
   const lastObstacle = game.obstacles[game.obstacles.length - 1];
   let lane;
   if (hardMode) {
+    const approachingObstacles = game.obstacles.filter(
+      (obstacle) => obstacle.y < road.height + 80,
+    );
     const approachingLanes = new Set(
-      game.obstacles
-        .filter((obstacle) => obstacle.y < road.height + 80)
-        .map((obstacle) => obstacle.lane),
+      approachingObstacles.map((obstacle) => obstacle.lane),
     );
     const safeLanes = [];
     for (let candidateLane = 0; candidateLane < laneCount; candidateLane += 1) {
@@ -147,7 +149,15 @@ function spawnObstacle() {
       const overlapsSameLane = game.obstacles.some((obstacle) => (
         obstacle.lane === candidateLane && obstacle.y < 28
       ));
-      if (followsRotation && !overlapsSameLane && hasSafeLane(candidateLane)) {
+      const laneTrafficCount = approachingObstacles.filter(
+        (obstacle) => obstacle.lane === candidateLane,
+      ).length;
+      if (
+        followsRotation
+        && laneTrafficCount < hardLaneObstacleLimit
+        && !overlapsSameLane
+        && hasSafeLane(candidateLane)
+      ) {
         safeLanes.push(candidateLane);
       }
     }

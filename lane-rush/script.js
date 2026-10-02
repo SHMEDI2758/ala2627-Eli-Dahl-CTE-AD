@@ -133,10 +133,10 @@ function spawnObstacle() {
   if (hardMode) {
     const safeLanes = [];
     for (let candidateLane = 0; candidateLane < laneCount; candidateLane += 1) {
-      const repeatsTooSoon = lastObstacle
-        && lastObstacle.lane === candidateLane
-        && lastObstacle.y < 120;
-      if (!repeatsTooSoon && hasSafeLane(candidateLane)) safeLanes.push(candidateLane);
+      const overlapsSameLane = game.obstacles.some((obstacle) => (
+        obstacle.lane === candidateLane && obstacle.y < 28
+      ));
+      if (!overlapsSameLane && hasSafeLane(candidateLane)) safeLanes.push(candidateLane);
     }
     if (safeLanes.length === 0) return;
     lane = safeLanes[Math.floor(Math.random() * safeLanes.length)];
@@ -159,7 +159,7 @@ function hasSafeLane(nextLane) {
   const dangerEnd = road.height + 80;
   const occupiedLanes = new Set(
     game.obstacles
-      .filter((obstacle) => obstacle.y > dangerStart && obstacle.y < dangerEnd)
+      .filter((obstacle) => obstacle.y < dangerEnd && (hardMode || obstacle.y > dangerStart))
       .map((obstacle) => obstacle.lane),
   );
   occupiedLanes.add(nextLane);
@@ -336,6 +336,7 @@ window.addEventListener("keydown", (event) => {
     return;
   }
   if (["ArrowLeft", "ArrowRight", "a", "d", "p", "P", " "].includes(event.key)) event.preventDefault();
+  if (event.repeat) return;
   if (event.key === "ArrowLeft" || event.key.toLowerCase() === "a") movePlayer(-1);
   if (event.key === "ArrowRight" || event.key.toLowerCase() === "d") movePlayer(1);
   if (event.key.toLowerCase() === "p" || event.key === " ") togglePause();

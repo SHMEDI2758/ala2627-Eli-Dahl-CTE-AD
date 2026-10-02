@@ -299,6 +299,31 @@ kbd {
   text-transform: uppercase;
 }
 
+.hard-mode-button {
+  padding: 0;
+  color: var(--muted);
+  border: 0;
+  background: transparent;
+  font-family: "DM Mono", monospace;
+  font-size: .6rem;
+  letter-spacing: .04em;
+  text-transform: uppercase;
+}
+
+.hard-mode-button[aria-pressed="true"] {
+  color: var(--orange);
+}
+
+.hard-mode-button:disabled {
+  cursor: default;
+  opacity: .65;
+}
+
+.hard-mode-button:not(:disabled):hover,
+.hard-mode-button:focus-visible {
+  color: var(--orange);
+}
+
 .hitbox-link:hover,
 .hitbox-link:focus-visible {
   color: var(--orange);

@@ -5,6 +5,7 @@ const messageTitle = document.querySelector("#message-title");
 const messageCopy = document.querySelector("#message-copy");
 const startButton = document.querySelector("#start-button");
 const fullscreenButton = document.querySelector("#fullscreen-button");
+const hardModeButton = document.querySelector("#hard-mode-button");
 const gameFrame = document.querySelector(".game-frame");
 const scoreReadout = document.querySelector("#score");
 const speedReadout = document.querySelector("#speed");
@@ -21,13 +22,15 @@ let lastTime = 0;
 let viewZoom = 1;
 let viewOffsetX = 0;
 let viewOffsetY = 0;
+let hardMode = false;
 let road = { width: 0, height: 0, left: 0, laneWidth: 0 };
 let game = createGameState();
 
 function getBestStorageKey() {
   const hitboxMode = document.body.dataset.mode === "hitbox"
     || new URLSearchParams(window.location.search).get("mode") === "hitbox";
-  return hitboxMode ? "lane-rush-hitbox-best" : "lane-rush-best";
+  const modeKey = hitboxMode ? "lane-rush-hitbox" : "lane-rush";
+  return `${modeKey}${hardMode ? "-hard" : ""}-best`;
 }
 
 function loadBestScore() {
@@ -67,6 +70,7 @@ function startGame() {
   game = createGameState();
   resetViewZoom();
   game.active = true;
+  updateHardModeButton();
   gameMessage.classList.add("is-hidden");
   lastTime = performance.now();
   updateHud();
@@ -79,6 +83,7 @@ window.addEventListener("lane-rush-mode-change", startGame);
 function endGame() {
   if (!game.active) return;
   game.active = false;
+  updateHardModeButton();
   game.showDeathHitboxes = true;
   const finalScore = Math.floor(game.distance);
   if (finalScore > game.best) {
@@ -130,6 +135,12 @@ function spawnObstacle() {
   game.obstacles.push({ lane, y: -100, color: laneColors[Math.floor(Math.random() * laneColors.length)] });
 }
 
+function updateHardModeButton() {
+  hardModeButton.textContent = `hard mode: ${hardMode ? "on" : "off"}`;
+  hardModeButton.setAttribute("aria-pressed", String(hardMode));
+  hardModeButton.disabled = game.active;
+}
+
 function hasSafeLane(nextLane) {
   const dangerStart = road.height - 270;
   const dangerEnd = road.height + 80;
@@ -157,7 +168,11 @@ function update(delta) {
   game.spawnTimer -= delta;
   if (game.spawnTimer <= 0) {
     spawnObstacle();
-    game.spawnTimer = Math.max(0.42, 1.05 - game.level * 0.055) * (0.82 + Math.random() * 0.3);
+    const spawnInterval = 1.05 - game.level * 0.055;
+    const randomFactor = 0.82 + Math.random() * 0.3;
+    game.spawnTimer = hardMode
+      ? Math.max(4 / 60, spawnInterval * randomFactor)
+      : Math.max(0.42, spawnInterval) * randomFactor;
   }
 
   const obstacleSpeed = road.height * (0.34 + game.speed * 0.075);
@@ -314,6 +329,13 @@ window.addEventListener("keydown", (event) => {
   if (event.key === "Enter" && !game.active) startGame();
 });
 startButton.addEventListener("click", startGame);
+hardModeButton.addEventListener("click", () => {
+  if (game.active) return;
+  hardMode = !hardMode;
+  updateHardModeButton();
+  updateHud();
+});
 resizeCanvas();
 bestReadout.textContent = String(game.best).padStart(4, "0");
+updateHardModeButton();
 draw();

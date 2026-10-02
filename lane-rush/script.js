@@ -179,7 +179,7 @@ function update(delta) {
   game.distance += delta * 13 * game.speed;
   game.level = Math.floor(game.distance / 100) + 1;
   game.spawnTimer -= delta;
-  if (game.spawnTimer <= 0) {
+  if (game.spawnTimer <= 1e-9) {
     spawnObstacle();
     const spawnInterval = 1.05 - game.level * 0.055;
     const randomFactor = 0.82 + Math.random() * 0.3;

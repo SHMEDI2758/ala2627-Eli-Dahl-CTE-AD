@@ -128,10 +128,23 @@ function movePlayer(direction) {
 }
 
 function spawnObstacle() {
-  const lane = Math.floor(Math.random() * laneCount);
   const lastObstacle = game.obstacles[game.obstacles.length - 1];
-  if (lastObstacle && lastObstacle.lane === lane && lastObstacle.y < 120) return;
-  if (!hasSafeLane(lane)) return;
+  let lane;
+  if (hardMode) {
+    const safeLanes = [];
+    for (let candidateLane = 0; candidateLane < laneCount; candidateLane += 1) {
+      const repeatsTooSoon = lastObstacle
+        && lastObstacle.lane === candidateLane
+        && lastObstacle.y < 120;
+      if (!repeatsTooSoon && hasSafeLane(candidateLane)) safeLanes.push(candidateLane);
+    }
+    if (safeLanes.length === 0) return;
+    lane = safeLanes[Math.floor(Math.random() * safeLanes.length)];
+  } else {
+    lane = Math.floor(Math.random() * laneCount);
+    if (lastObstacle && lastObstacle.lane === lane && lastObstacle.y < 120) return;
+    if (!hasSafeLane(lane)) return;
+  }
   game.obstacles.push({ lane, y: -100, color: laneColors[Math.floor(Math.random() * laneColors.length)] });
 }
 

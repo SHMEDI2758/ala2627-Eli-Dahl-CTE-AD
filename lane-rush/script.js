@@ -43,6 +43,7 @@ function createGameState() {
     paused: false,
     playerLane: 1,
     playerX: 1,
+    hardSafeLane: 2,
     obstacles: [],
     distance: 0,
     roadOffset: 0,
@@ -131,15 +132,37 @@ function spawnObstacle() {
   const lastObstacle = game.obstacles[game.obstacles.length - 1];
   let lane;
   if (hardMode) {
+    const approachingLanes = new Set(
+      game.obstacles
+        .filter((obstacle) => obstacle.y < road.height + 80)
+        .map((obstacle) => obstacle.lane),
+    );
     const safeLanes = [];
     for (let candidateLane = 0; candidateLane < laneCount; candidateLane += 1) {
+      const followsRotation = approachingLanes.size === 0
+        ? candidateLane !== game.hardSafeLane
+        : approachingLanes.size === 1
+          ? candidateLane === game.hardSafeLane
+          : approachingLanes.has(candidateLane);
       const overlapsSameLane = game.obstacles.some((obstacle) => (
         obstacle.lane === candidateLane && obstacle.y < 28
       ));
-      if (!overlapsSameLane && hasSafeLane(candidateLane)) safeLanes.push(candidateLane);
+      if (followsRotation && !overlapsSameLane && hasSafeLane(candidateLane)) {
+        safeLanes.push(candidateLane);
+      }
     }
     if (safeLanes.length === 0) return;
     lane = safeLanes[Math.floor(Math.random() * safeLanes.length)];
+    const occupiedAfterSpawn = new Set(approachingLanes);
+    occupiedAfterSpawn.add(lane);
+    if (occupiedAfterSpawn.size === 2) {
+      for (let candidateLane = 0; candidateLane < laneCount; candidateLane += 1) {
+        if (!occupiedAfterSpawn.has(candidateLane)) {
+          game.hardSafeLane = candidateLane;
+          break;
+        }
+      }
+    }
   } else {
     lane = Math.floor(Math.random() * laneCount);
     if (lastObstacle && lastObstacle.lane === lane && lastObstacle.y < 120) return;
